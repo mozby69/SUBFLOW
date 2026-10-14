@@ -4,9 +4,11 @@ import { usePathname } from "next/navigation";
 import {
   Bell,
   Plus,
+  Menu,
 } from "lucide-react";
 
 import { navigation } from "@/config/navigation.config";
+import { useSidebar } from "./Sidebar-Context";
 
 export default function Header() {
   const pathname = usePathname();
@@ -22,12 +24,38 @@ export default function Header() {
 
   const pageTitle = currentPage?.title ?? "Overview";
 
+  const {
+  collapsed,
+  toggleSidebar,
+  toggleMobile,
+} = useSidebar();
+
   return (
-    <header className="flex h-19.75 shrink-0 items-center justify-between border-b border-[#E0E2DC] bg-[#F8F9F6] px-8">
-      {/* Left */}
+ <header className="flex h-20.5 shrink-0 items-center justify-between border-b border-[#DDDED8] bg-[#F8F9F6] px-8">
+      <button
+  type="button"
+  onClick={() => {
+    if (window.innerWidth < 1024) {
+      toggleMobile();
+    } else {
+      toggleSidebar();
+    }
+  }}
+  aria-label="Toggle sidebar"
+  aria-expanded={!collapsed}
+  className="
+    flex h-9 w-9 shrink-0 items-center justify-center
+    rounded-lg text-[#26342F]
+    transition-colors hover:bg-[#E2E5DF]
+  "
+>
+  <Menu size={20} strokeWidth={1.8} />
+</button>
+
+
       <div className="flex flex-col gap-0.5">
         <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#929A93]">
-          Admin Workspace
+          User Workspace
         </p>
 
         <h1 className="text-[17px] font-semibold leading-tight tracking-tight text-[#26342F]">

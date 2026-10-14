@@ -42,3 +42,8 @@ export type Permission = Prisma.PermissionModel
  * 
  */
 export type RolePermission = Prisma.RolePermissionModel
+/**
+ * Model Subscription
+ * 
+ */
+export type Subscription = Prisma.SubscriptionModel

@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 model User {
@@ -79,4 +79,34 @@ model RolePermission {
 
   @@id([roleId, permissionId])
   @@map("role_permissions")
+}
+
+
+enum status_subscription {
+  ACTIVE
+  DUE_SOON
+  OVERDUE
+  CANCELLED
+}
+
+
+enum billing_cycle {
+  MONTHLY
+  YEARLY
+}
+
+model Subscription{
+  id                Int       @id @default(autoincrement()) @map("subscription_id")
+  subscriptionName  String    @db.VarChar(100) @map("subscription_name")
+  amount            Decimal?  @db.Decimal(10, 2)
+  billingCycle     billing_cycle
+  nextBilling       DateTime? @db.Date @map("next_billing")
+  paymentCard       String?   @db.VarChar(100) @map("payment_card")
+  category          String?   @db.VarChar(100) @map("category")
+  status            status_subscription 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscription")
 }

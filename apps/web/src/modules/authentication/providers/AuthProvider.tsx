@@ -60,8 +60,8 @@ export function AuthProvider({
                 return;
             }
 
-            if (roles.includes("BRANCH")) {
-                router.replace("/ssp/dashboard");
+            if (roles.includes("USER")) {
+                router.replace("/user/dashboard");
                 return;
             }
 
