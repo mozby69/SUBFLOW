@@ -47,3 +47,8 @@ export type RolePermission = Prisma.RolePermissionModel
  * 
  */
 export type Subscription = Prisma.SubscriptionModel
+/**
+ * Model CreditCard
+ * 
+ */
+export type CreditCard = Prisma.CreditCardModel

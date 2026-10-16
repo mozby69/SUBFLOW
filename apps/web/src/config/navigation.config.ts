@@ -6,7 +6,8 @@ import {
     Settings,
     BookText,
     Library,
-    RefreshCcw
+    RefreshCcw,
+    CreditCard
 } from "lucide-react";
 
 import { NavigationItem } from "@/types/navigation.types";
@@ -35,6 +36,12 @@ export const navigation: NavigationItem[] = [
         title: "Subscription",
         href: ROUTES.USER.SUBSCRIPTION, // temporary
         icon: RefreshCcw,
+        roles: ["USER"],
+    },
+     {
+        title: "Credit Card",
+        href: ROUTES.USER.CREDIT_CARD, // temporary
+        icon: CreditCard,
         roles: ["USER"],
     },
    
