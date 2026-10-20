@@ -58,6 +58,22 @@ CREATE TABLE `role_permissions` (
     PRIMARY KEY (`roleId`, `permissionId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `subscription` (
+    `subscription_id` INTEGER NOT NULL AUTO_INCREMENT,
+    `subscription_name` VARCHAR(100) NOT NULL,
+    `amount` DECIMAL(10, 2) NULL,
+    `billingCycle` ENUM('MONTHLY', 'YEARLY') NOT NULL,
+    `next_billing` DATE NULL,
+    `payment_card` VARCHAR(100) NULL,
+    `category` VARCHAR(100) NULL,
+    `status` ENUM('ACTIVE', 'DUE_SOON', 'OVERDUE', 'CANCELLED') NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`subscription_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `user_roles` ADD CONSTRAINT `user_roles_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
