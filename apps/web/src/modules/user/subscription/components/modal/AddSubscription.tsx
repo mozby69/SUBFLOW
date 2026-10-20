@@ -15,17 +15,18 @@ import {
 
 import {
   addSubscriptionSchema,
+  CreditCard2,
   type AddSubscriptionInput,
   type AddSubscriptionValues,
 } from "@repo/shared"; 
-import toast from "react-hot-toast";
+import { useGetCreditCards } from "../../hooks/useSubscription";
+
 
 interface AddModalSubscriptionProps {
   onClose: () => void;
-  onSubmit: (
-    values: AddSubscriptionValues
-  ) => Promise<void> | void;
+  onSubmit: (values: AddSubscriptionValues) => Promise<void> | void;
   isSaving?: boolean;
+  creditCards: CreditCard2[];
 }
 
 const inputClass = `
@@ -47,7 +48,13 @@ const labelClass =
 const errorClass =
   "mt-1 text-[11px] text-red-600";
 
-export default function AddModalSubscription({onClose,onSubmit,isSaving = false}: AddModalSubscriptionProps) {
+export default function AddModalSubscription({
+  onClose,
+  onSubmit,
+  isSaving = false,
+  creditCards,
+}: AddModalSubscriptionProps) {
+
   const {
     register,
     handleSubmit,
@@ -64,8 +71,8 @@ export default function AddModalSubscription({onClose,onSubmit,isSaving = false}
       billingCycle: "MONTHLY",
       nextBilling: "",
       status: "ACTIVE",
-      paymentCard: "",
       category: "",
+      creditCardId:0,
     },
   });
 
@@ -77,6 +84,17 @@ export default function AddModalSubscription({onClose,onSubmit,isSaving = false}
     await onSubmit(values);
 
   };
+
+
+
+
+  const {
+    data: creditCardResponse,
+    isPending: isCardsLoading,
+    isError: isCardsError,
+  } = useGetCreditCards();
+
+  const creditCards2 = creditCardResponse?.data ?? [];
 
   return (
     <form
@@ -239,37 +257,44 @@ export default function AddModalSubscription({onClose,onSubmit,isSaving = false}
 
         {/* Payment Card */}
         <div>
-          <label
-            htmlFor="payment-card"
-            className={labelClass}
-          >
-            Payment Card *
-          </label>
+  <label htmlFor="credit-card" className={labelClass}>
+    Payment Card <span className="text-red-500">*</span>
+  </label>
 
-          <select
-            id="payment-card"
-            {...register("paymentCard")}
-            className={inputClass}
-          >
-            <option value="">Select payment card</option>
-            <option value="visa4242">
-              Visa ending in 4242
-            </option>
-            <option value="mastercard8891">
-              Mastercard ending in 8891
-            </option>
-            <option value="mastercard1122">
-              Mastercard ending in 1122
-            </option>
-          </select>
+  <select
+    id="credit-card"
+    {...register("creditCardId")}
+    disabled={isCardsLoading || isCardsError}
+    className={inputClass}
+  >
+    <option value="">
+      {isCardsLoading
+        ? "Loading credit cards..."
+        : isCardsError
+          ? "Unable to load credit cards"
+          : "Select payment card"}
+    </option>
 
-          {errors.paymentCard && (
-            <p className={errorClass}>
-              {errors.paymentCard.message}
-            </p>
-          )}
-        </div>
+    {creditCards2.map((card) => (
+      <option key={card.id} value={card.id}>
+        {card.bank} - {card.network} ••••
+        {String(card.last_four_digit).padStart(4, "0")}
+      </option>
+    ))}
+  </select>
 
+  {errors.creditCardId && (
+    <p className={errorClass}>
+      {errors.creditCardId.message}
+    </p>
+  )}
+
+  {!isCardsLoading && !isCardsError && creditCards.length === 0 && (
+    <p className="mt-2 text-xs text-amber-700">
+      No credit cards available. Add a credit card first.
+    </p>
+  )}
+</div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Category */}
           <div>

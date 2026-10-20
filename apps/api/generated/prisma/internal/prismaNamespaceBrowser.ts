@@ -56,7 +56,8 @@ export const ModelName = {
   UserRole: 'UserRole',
   Permission: 'Permission',
   RolePermission: 'RolePermission',
-  Subscription: 'Subscription'
+  Subscription: 'Subscription',
+  CreditCard: 'CreditCard'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -138,11 +139,25 @@ export const SubscriptionScalarFieldEnum = {
   paymentCard: 'paymentCard',
   category: 'category',
   status: 'status',
+  creditCardId: 'creditCardId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const CreditCardScalarFieldEnum = {
+  id: 'id',
+  bank: 'bank',
+  last_four_digit: 'last_four_digit',
+  network: 'network',
+  nickname: 'nickname',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CreditCardScalarFieldEnum = (typeof CreditCardScalarFieldEnum)[keyof typeof CreditCardScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -195,4 +210,13 @@ export const SubscriptionOrderByRelevanceFieldEnum = {
 } as const
 
 export type SubscriptionOrderByRelevanceFieldEnum = (typeof SubscriptionOrderByRelevanceFieldEnum)[keyof typeof SubscriptionOrderByRelevanceFieldEnum]
+
+
+export const CreditCardOrderByRelevanceFieldEnum = {
+  bank: 'bank',
+  network: 'network',
+  nickname: 'nickname'
+} as const
+
+export type CreditCardOrderByRelevanceFieldEnum = (typeof CreditCardOrderByRelevanceFieldEnum)[keyof typeof CreditCardOrderByRelevanceFieldEnum]
 

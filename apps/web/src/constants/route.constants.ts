@@ -10,5 +10,6 @@ export const ROUTES = {
     USER:{
         DASHBOARD: "/user/dashboard",
         SUBSCRIPTION: "/user/subscription",
+        CREDIT_CARD: "/user/credit-card",
     }
 } as const;

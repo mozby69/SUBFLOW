@@ -84,9 +84,9 @@ model RolePermission {
 
 enum status_subscription {
   ACTIVE
-  DUE_SOON
-  OVERDUE
+  PAUSED
   CANCELLED
+  TRIAL
 }
 
 
@@ -96,17 +96,38 @@ enum billing_cycle {
 }
 
 model Subscription{
-  id                Int       @id @default(autoincrement()) @map("subscription_id")
-  subscriptionName  String    @db.VarChar(100) @map("subscription_name")
-  amount            Decimal?  @db.Decimal(10, 2)
-  billingCycle     billing_cycle
-  nextBilling       DateTime? @db.Date @map("next_billing")
-  paymentCard       String?   @db.VarChar(100) @map("payment_card")
-  category          String?   @db.VarChar(100) @map("category")
+  id                Int           @id @default(autoincrement()) @map("subscription_id")
+  subscriptionName  String        @db.VarChar(100) @map("subscription_name")
+  amount            Decimal?      @db.Decimal(10, 2)
+  billingCycle     billing_cycle  @map("billing_cycle")
+  nextBilling       DateTime?     @db.Date @map("next_billing")
+  paymentCard       String?       @db.VarChar(100) @map("payment_card")
+  category          String?       @db.VarChar(100) @map("category")
   status            status_subscription 
+
+  creditCardId      Int           @map("credit_card")
+  card       CreditCard           @relation(fields: [creditCardId], references: [id], onDelete: Cascade)
+
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("subscription")
+}
+
+
+model CreditCard{
+    id                Int        @id @default(autoincrement()) @map("card_id")
+    bank              String     @db.VarChar(100) 
+    last_four_digit   Int    
+    network           String     @db.VarChar(100)
+    nickname          String?    @db.VarChar(100)
+    
+
+    subscription       Subscription[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    @@map("card")
 }
