@@ -11,9 +11,9 @@
 
 export const status_subscription = {
   ACTIVE: 'ACTIVE',
-  DUE_SOON: 'DUE_SOON',
-  OVERDUE: 'OVERDUE',
-  CANCELLED: 'CANCELLED'
+  PAUSED: 'PAUSED',
+  CANCELLED: 'CANCELLED',
+  TRIAL: 'TRIAL'
 } as const
 
 export type status_subscription = (typeof status_subscription)[keyof typeof status_subscription]
