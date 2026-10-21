@@ -2,43 +2,108 @@ import { prisma } from "@/lib/database/prisma";
 import { billing_cycle, status_subscription } from "../../../generated/prisma/enums";
 import { QueryParams } from "../../../../../packages/shared/src/types/query.types";
 import { Prisma, Subscription } from "../../../generated/prisma/client";
-import { AddSubscriptionValues, CreditCard2, UpdateSubscriptionSchema } from "@repo/shared";
+import { AddSubscriptionValues, CreateSubscriptionInput, CreditCard2, UpdateSubscriptionSchema } from "@repo/shared";
+import { calculateNextBillingDate } from "../billing/billing.utils";
 
 
 
-
-
-interface CreateSubscriptionData {
-  subscriptionName: string;
-  amount: number;
-  billingCycle: billing_cycle;
+export interface CreateSubscriptionData
+  extends Omit<
+    CreateSubscriptionInput,
+    "nextBilling" | "startDate" | "endDate"
+  > {
   nextBilling: Date;
-
-  category: string;
-  status: status_subscription;
-  creditCardId: number;
+  startDate: Date | null;
+  endDate: Date | null;
 }
 
-export async function addSubscription(data: CreateSubscriptionData) {
-  return prisma.subscription.create({
-    data: {
-      subscriptionName: data.subscriptionName,
-      amount: data.amount,
-      billingCycle: data.billingCycle,
-      nextBilling: data.nextBilling,
 
-      category: data.category,
-      status: data.status,
 
-      card: {
-        connect: {
-          id: data.creditCardId,
+export async function addSubscription(
+  data: CreateSubscriptionData
+) {
+  return prisma.$transaction(async (tx) => {
+    // The supplied nextBilling is the first due date.
+
+    const shouldCreateBilling =
+      data.status === "ACTIVE";
+
+const firstBillingDate = data.nextBilling;
+
+const nextBilling = shouldCreateBilling
+  ? data.autoRenew
+    ? calculateNextBillingDate(
+        firstBillingDate,
+        data.billingCycle,
+        data.anchorDay ?? firstBillingDate.getUTCDate()
+      )
+    : null
+  : firstBillingDate;
+    // STEP 1: Create the subscription.
+    const subscription = await tx.subscription.create({
+      data: {
+        subscriptionName: data.subscriptionName,
+        description: data.description,
+
+        amount: data.amount,
+        billingCycle: data.billingCycle,
+        nextBilling,
+
+        currencyCode: data.currencyCode,
+
+        category: data.category,
+
+        ...(data.categoryId !== null && {
+          subscriptionCategory: {
+            connect: {
+              id: data.categoryId,
+            },
+          },
+        }),
+
+        status: data.status,
+
+        card: {
+          connect: {
+            id: data.creditCardId,
+          },
         },
+
+        startDate: data.startDate,
+        endDate: data.endDate,
+
+        anchorDay: data.anchorDay,
+        autoRenew: data.autoRenew,
+        website: data.website,
       },
-    },
+    });
+
+    // STEP 2: Create the first billing record.
+    if (!shouldCreateBilling) {
+      return {
+        subscription,
+        billing: null,
+      };
+    }
+
+    const billing = await tx.subscriptionBilling.create({
+      data: {
+        subscriptionId: subscription.id,
+        dueDate: firstBillingDate,
+        amount: data.amount,
+        currencyCode: data.currencyCode,
+        paidAmount: 0,
+        status: "SCHEDULED",
+      },
+    });
+
+    // Both records are committed together.
+    return {
+      subscription,
+      billing,
+    };
   });
 }
-
 
 export async function displaySubscription(params: QueryParams) {
   const {
@@ -185,27 +250,6 @@ export async function deleteSubscription(id: number) {
 
 
 
-export async function addCard(data: {
-    bank: string;
-    last_four_digit: number;
-    network: string;
-    nickname:string;
-
-}) {
-   return prisma.$transaction(async (tx) => {
-
-    const carddata = await tx.creditCard.create({
-            data: {
-                bank: data.bank,
-                last_four_digit: data.last_four_digit,
-                network: data.network,
-                nickname: data.nickname?.trim() || null,
-            },
-        });
-
-    return carddata;
-});
-}
 
 
 
@@ -213,58 +257,8 @@ export async function addCard(data: {
 
 
 
-export async function getCreditCards() {
-  const cards = await prisma.creditCard.findMany({
-    select: {
-      id: true,
-      bank: true,
-      last_four_digit: true,
-      network: true,
-      nickname: true,
 
-      subscription: {
-        select: {
-          amount: true,
-          billingCycle: true,
-          status: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
 
-  return cards.map((card) => {
-    const activeSubscriptions = card.subscription.filter(
-      (subscription) => subscription.status === "ACTIVE"
-    );
-
-    const monthlyEquivalent = activeSubscriptions.reduce(
-      (total, subscription) => {
-        const amount = Number(subscription.amount ?? 0);
-
-        return (
-          total +
-          (subscription.billingCycle === "YEARLY"
-            ? amount / 12
-            : amount)
-        );
-      },
-      0
-    );
-
-    return {
-      id: card.id,
-      bank: card.bank,
-      last_four_digit: card.last_four_digit,
-      network: card.network,
-      nickname: card.nickname,
-      subscriptionCount: card.subscription.length,
-      monthlyEquivalent: Math.round(monthlyEquivalent * 100) / 100,
-    };
-  });
-}
 
 
 

@@ -56,7 +56,18 @@ export const ModelName = {
   UserRole: 'UserRole',
   Permission: 'Permission',
   RolePermission: 'RolePermission',
+  SubscriptionCategory: 'SubscriptionCategory',
   Subscription: 'Subscription',
+  SubscriptionBilling: 'SubscriptionBilling',
+  SubscriptionPayment: 'SubscriptionPayment',
+  CardCharge: 'CardCharge',
+  CardStatement: 'CardStatement',
+  CardPayment: 'CardPayment',
+  SubscriptionPriceHistory: 'SubscriptionPriceHistory',
+  Budget: 'Budget',
+  Notification: 'Notification',
+  ExchangeRate: 'ExchangeRate',
+  AuditLog: 'AuditLog',
   CreditCard: 'CreditCard'
 } as const
 
@@ -130,6 +141,20 @@ export const RolePermissionScalarFieldEnum = {
 export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum]
 
 
+export const SubscriptionCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  icon: 'icon',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionCategoryScalarFieldEnum = (typeof SubscriptionCategoryScalarFieldEnum)[keyof typeof SubscriptionCategoryScalarFieldEnum]
+
+
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
   subscriptionName: 'subscriptionName',
@@ -140,11 +165,188 @@ export const SubscriptionScalarFieldEnum = {
   category: 'category',
   status: 'status',
   creditCardId: 'creditCardId',
+  description: 'description',
+  currencyCode: 'currencyCode',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  anchorDay: 'anchorDay',
+  autoRenew: 'autoRenew',
+  website: 'website',
+  categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const SubscriptionBillingScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  dueDate: 'dueDate',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  status: 'status',
+  paidAmount: 'paidAmount',
+  remarks: 'remarks',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionBillingScalarFieldEnum = (typeof SubscriptionBillingScalarFieldEnum)[keyof typeof SubscriptionBillingScalarFieldEnum]
+
+
+export const SubscriptionPaymentScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  billingId: 'billingId',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  paymentDate: 'paymentDate',
+  status: 'status',
+  referenceNumber: 'referenceNumber',
+  idempotencyKey: 'idempotencyKey',
+  remarks: 'remarks',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionPaymentScalarFieldEnum = (typeof SubscriptionPaymentScalarFieldEnum)[keyof typeof SubscriptionPaymentScalarFieldEnum]
+
+
+export const CardChargeScalarFieldEnum = {
+  id: 'id',
+  creditCardId: 'creditCardId',
+  subscriptionPaymentId: 'subscriptionPaymentId',
+  statementId: 'statementId',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  postedAmount: 'postedAmount',
+  exchangeRate: 'exchangeRate',
+  transactionDate: 'transactionDate',
+  postingDate: 'postingDate',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CardChargeScalarFieldEnum = (typeof CardChargeScalarFieldEnum)[keyof typeof CardChargeScalarFieldEnum]
+
+
+export const CardStatementScalarFieldEnum = {
+  id: 'id',
+  creditCardId: 'creditCardId',
+  periodStart: 'periodStart',
+  periodEnd: 'periodEnd',
+  statementDate: 'statementDate',
+  dueDate: 'dueDate',
+  openingBalance: 'openingBalance',
+  totalCharges: 'totalCharges',
+  totalPayments: 'totalPayments',
+  closingBalance: 'closingBalance',
+  minimumPayment: 'minimumPayment',
+  currencyCode: 'currencyCode',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CardStatementScalarFieldEnum = (typeof CardStatementScalarFieldEnum)[keyof typeof CardStatementScalarFieldEnum]
+
+
+export const CardPaymentScalarFieldEnum = {
+  id: 'id',
+  creditCardId: 'creditCardId',
+  statementId: 'statementId',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  paymentDate: 'paymentDate',
+  referenceNumber: 'referenceNumber',
+  remarks: 'remarks',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CardPaymentScalarFieldEnum = (typeof CardPaymentScalarFieldEnum)[keyof typeof CardPaymentScalarFieldEnum]
+
+
+export const SubscriptionPriceHistoryScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  oldAmount: 'oldAmount',
+  newAmount: 'newAmount',
+  currencyCode: 'currencyCode',
+  effectiveDate: 'effectiveDate',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type SubscriptionPriceHistoryScalarFieldEnum = (typeof SubscriptionPriceHistoryScalarFieldEnum)[keyof typeof SubscriptionPriceHistoryScalarFieldEnum]
+
+
+export const BudgetScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  amount: 'amount',
+  currencyCode: 'currencyCode',
+  period: 'period',
+  categoryId: 'categoryId',
+  alertThreshold: 'alertThreshold',
+  isActive: 'isActive',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BudgetScalarFieldEnum = (typeof BudgetScalarFieldEnum)[keyof typeof BudgetScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subscriptionId: 'subscriptionId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  isRead: 'isRead',
+  scheduledFor: 'scheduledFor',
+  sentAt: 'sentAt',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const ExchangeRateScalarFieldEnum = {
+  id: 'id',
+  fromCurrency: 'fromCurrency',
+  toCurrency: 'toCurrency',
+  rate: 'rate',
+  effectiveDate: 'effectiveDate',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  module: 'module',
+  referenceId: 'referenceId',
+  description: 'description',
+  oldValues: 'oldValues',
+  newValues: 'newValues',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const CreditCardScalarFieldEnum = {
@@ -153,6 +355,13 @@ export const CreditCardScalarFieldEnum = {
   last_four_digit: 'last_four_digit',
   network: 'network',
   nickname: 'nickname',
+  creditLimit: 'creditLimit',
+  currencyCode: 'currencyCode',
+  statementDay: 'statementDay',
+  dueDay: 'dueDay',
+  status: 'status',
+  expiryMonth: 'expiryMonth',
+  expiryYear: 'expiryYear',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -166,6 +375,14 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const NullsOrder = {
@@ -203,19 +420,135 @@ export const PermissionOrderByRelevanceFieldEnum = {
 export type PermissionOrderByRelevanceFieldEnum = (typeof PermissionOrderByRelevanceFieldEnum)[keyof typeof PermissionOrderByRelevanceFieldEnum]
 
 
+export const SubscriptionCategoryOrderByRelevanceFieldEnum = {
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  icon: 'icon'
+} as const
+
+export type SubscriptionCategoryOrderByRelevanceFieldEnum = (typeof SubscriptionCategoryOrderByRelevanceFieldEnum)[keyof typeof SubscriptionCategoryOrderByRelevanceFieldEnum]
+
+
 export const SubscriptionOrderByRelevanceFieldEnum = {
   subscriptionName: 'subscriptionName',
   paymentCard: 'paymentCard',
-  category: 'category'
+  category: 'category',
+  description: 'description',
+  currencyCode: 'currencyCode',
+  website: 'website'
 } as const
 
 export type SubscriptionOrderByRelevanceFieldEnum = (typeof SubscriptionOrderByRelevanceFieldEnum)[keyof typeof SubscriptionOrderByRelevanceFieldEnum]
 
 
+export const SubscriptionBillingOrderByRelevanceFieldEnum = {
+  currencyCode: 'currencyCode',
+  remarks: 'remarks'
+} as const
+
+export type SubscriptionBillingOrderByRelevanceFieldEnum = (typeof SubscriptionBillingOrderByRelevanceFieldEnum)[keyof typeof SubscriptionBillingOrderByRelevanceFieldEnum]
+
+
+export const SubscriptionPaymentOrderByRelevanceFieldEnum = {
+  currencyCode: 'currencyCode',
+  referenceNumber: 'referenceNumber',
+  idempotencyKey: 'idempotencyKey',
+  remarks: 'remarks'
+} as const
+
+export type SubscriptionPaymentOrderByRelevanceFieldEnum = (typeof SubscriptionPaymentOrderByRelevanceFieldEnum)[keyof typeof SubscriptionPaymentOrderByRelevanceFieldEnum]
+
+
+export const CardChargeOrderByRelevanceFieldEnum = {
+  currencyCode: 'currencyCode',
+  description: 'description'
+} as const
+
+export type CardChargeOrderByRelevanceFieldEnum = (typeof CardChargeOrderByRelevanceFieldEnum)[keyof typeof CardChargeOrderByRelevanceFieldEnum]
+
+
+export const CardStatementOrderByRelevanceFieldEnum = {
+  currencyCode: 'currencyCode'
+} as const
+
+export type CardStatementOrderByRelevanceFieldEnum = (typeof CardStatementOrderByRelevanceFieldEnum)[keyof typeof CardStatementOrderByRelevanceFieldEnum]
+
+
+export const CardPaymentOrderByRelevanceFieldEnum = {
+  currencyCode: 'currencyCode',
+  referenceNumber: 'referenceNumber',
+  remarks: 'remarks'
+} as const
+
+export type CardPaymentOrderByRelevanceFieldEnum = (typeof CardPaymentOrderByRelevanceFieldEnum)[keyof typeof CardPaymentOrderByRelevanceFieldEnum]
+
+
+export const SubscriptionPriceHistoryOrderByRelevanceFieldEnum = {
+  currencyCode: 'currencyCode',
+  reason: 'reason'
+} as const
+
+export type SubscriptionPriceHistoryOrderByRelevanceFieldEnum = (typeof SubscriptionPriceHistoryOrderByRelevanceFieldEnum)[keyof typeof SubscriptionPriceHistoryOrderByRelevanceFieldEnum]
+
+
+export const BudgetOrderByRelevanceFieldEnum = {
+  name: 'name',
+  currencyCode: 'currencyCode'
+} as const
+
+export type BudgetOrderByRelevanceFieldEnum = (typeof BudgetOrderByRelevanceFieldEnum)[keyof typeof BudgetOrderByRelevanceFieldEnum]
+
+
+export const NotificationOrderByRelevanceFieldEnum = {
+  title: 'title',
+  message: 'message'
+} as const
+
+export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]
+
+
+export const ExchangeRateOrderByRelevanceFieldEnum = {
+  fromCurrency: 'fromCurrency',
+  toCurrency: 'toCurrency',
+  source: 'source'
+} as const
+
+export type ExchangeRateOrderByRelevanceFieldEnum = (typeof ExchangeRateOrderByRelevanceFieldEnum)[keyof typeof ExchangeRateOrderByRelevanceFieldEnum]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const AuditLogOrderByRelevanceFieldEnum = {
+  module: 'module',
+  description: 'description',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
+} as const
+
+export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
 export const CreditCardOrderByRelevanceFieldEnum = {
   bank: 'bank',
   network: 'network',
-  nickname: 'nickname'
+  nickname: 'nickname',
+  currencyCode: 'currencyCode'
 } as const
 
 export type CreditCardOrderByRelevanceFieldEnum = (typeof CreditCardOrderByRelevanceFieldEnum)[keyof typeof CreditCardOrderByRelevanceFieldEnum]

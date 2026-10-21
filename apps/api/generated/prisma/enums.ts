@@ -11,9 +11,9 @@
 
 export const status_subscription = {
   ACTIVE: 'ACTIVE',
-  DUE_SOON: 'DUE_SOON',
-  OVERDUE: 'OVERDUE',
-  CANCELLED: 'CANCELLED'
+  PAUSED: 'PAUSED',
+  CANCELLED: 'CANCELLED',
+  TRIAL: 'TRIAL'
 } as const
 
 export type status_subscription = (typeof status_subscription)[keyof typeof status_subscription]
@@ -25,3 +25,79 @@ export const billing_cycle = {
 } as const
 
 export type billing_cycle = (typeof billing_cycle)[keyof typeof billing_cycle]
+
+
+export const BillingStatus = {
+  SCHEDULED: 'SCHEDULED',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+  PAID: 'PAID',
+  OVERDUE: 'OVERDUE',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BillingStatus = (typeof BillingStatus)[keyof typeof BillingStatus]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const CardStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  BLOCKED: 'BLOCKED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type CardStatus = (typeof CardStatus)[keyof typeof CardStatus]
+
+
+export const StatementStatus = {
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+  PAID: 'PAID',
+  OVERDUE: 'OVERDUE'
+} as const
+
+export type StatementStatus = (typeof StatementStatus)[keyof typeof StatementStatus]
+
+
+export const NotificationType = {
+  BILLING_REMINDER: 'BILLING_REMINDER',
+  PAYMENT_DUE: 'PAYMENT_DUE',
+  PAYMENT_SUCCESS: 'PAYMENT_SUCCESS',
+  PAYMENT_FAILED: 'PAYMENT_FAILED',
+  BUDGET_WARNING: 'BUDGET_WARNING',
+  SUBSCRIPTION_EXPIRING: 'SUBSCRIPTION_EXPIRING',
+  CARD_STATEMENT: 'CARD_STATEMENT',
+  SYSTEM: 'SYSTEM'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const BudgetPeriod = {
+  MONTHLY: 'MONTHLY',
+  YEARLY: 'YEARLY'
+} as const
+
+export type BudgetPeriod = (typeof BudgetPeriod)[keyof typeof BudgetPeriod]
+
+
+export const AuditAction = {
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE',
+  DELETE: 'DELETE',
+  PAYMENT: 'PAYMENT',
+  CANCEL: 'CANCEL',
+  GENERATE: 'GENERATE'
+} as const
+
+export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction]

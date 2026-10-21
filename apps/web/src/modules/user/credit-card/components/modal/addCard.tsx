@@ -3,23 +3,26 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Building2,
   CreditCard,
   Loader2,
   Plus,
+  CalendarDays,
+  Wallet,
 } from "lucide-react";
 
 import {
-  creditCardSchema,
-  type CreditCardInput,
-  type CreditCardSchema,
+  CreateCreditCardFormInput,
+  createCreditCardSchema,
+  type CreateCreditCardInput,
 } from "@repo/shared";
 
 interface AddModalCreditCardProps {
   onClose: () => void;
   onSubmit: (
-    values: CreditCardSchema
+    values: CreateCreditCardInput
   ) => Promise<void> | void;
   isSaving?: boolean;
 }
@@ -43,33 +46,49 @@ const labelClass =
 const errorClass =
   "mt-1 text-[11px] text-red-600";
 
-export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: AddModalCreditCardProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors,
-      isSubmitting,
-    },
-  } = useForm<
-    CreditCardInput,
-    unknown,
-    CreditCardSchema
-  >({
-    resolver: zodResolver(creditCardSchema),
-    defaultValues: {
-      bank: "",
-      last_four_digit: 0,
-      network: "",
-      nickname: "",
-    },
-  });
+export default function AddModalCreditCard({
+  onClose,
+  onSubmit,
+  isSaving = false,
+}: AddModalCreditCardProps) {
+const {
+  register,
+  handleSubmit,
+  formState: {
+    errors,
+    isSubmitting,
+  },
+} = useForm<
+  CreateCreditCardFormInput,
+  unknown,
+  CreateCreditCardInput
+>({
+  resolver: zodResolver(createCreditCardSchema),
+
+  defaultValues: {
+    bank: "",
+    last_four_digit: "",
+    network: "",
+    nickname: "",
+
+    creditLimit: 0,
+    currencyCode: "PHP",
+
+    statementDay: null,
+    dueDay: null,
+
+    status: "ACTIVE",
+
+    expiryMonth: null,
+    expiryYear: null,
+  },
+});
 
   const busy = isSaving || isSubmitting;
 
   const submitForm = async (
-    values: CreditCardSchema
-  ): Promise<void> => {
+    values: CreateCreditCardInput
+  ) => {
     await onSubmit(values);
   };
 
@@ -80,12 +99,12 @@ export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: 
       noValidate
     >
       <p className="text-[12px] leading-relaxed text-[#8A958C]">
-        Register a credit card to organize
-        subscription payments and track
-        recurring expenses.
+        Register a credit card to manage
+        subscriptions, billing statements,
+        and recurring expenses.
       </p>
 
-      {/* Bank Information */}
+      {/* BANK INFORMATION */}
       <section className="space-y-4">
         <div className="flex items-center gap-2 border-b border-[#E8EBE5] pb-3">
           <Building2
@@ -98,23 +117,15 @@ export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: 
           </h3>
         </div>
 
-        {/* Bank Name */}
         <div>
-          <label
-            htmlFor="bank"
-            className={labelClass}
-          >
-            Bank Name
-            <span className="ml-1 text-red-500">
-              *
-            </span>
+          <label htmlFor="bank" className={labelClass}>
+            Bank Name *
           </label>
 
           <input
             id="bank"
             {...register("bank")}
             placeholder="e.g. BDO, BPI, Metrobank"
-            aria-invalid={!!errors.bank}
             className={inputClass}
           />
 
@@ -126,7 +137,7 @@ export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: 
         </div>
       </section>
 
-      {/* Card Information */}
+      {/* CARD INFORMATION */}
       <section className="space-y-4">
         <div className="flex items-center gap-2 border-b border-[#E8EBE5] pb-3">
           <CreditCard
@@ -140,36 +151,25 @@ export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: 
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {/* Card Network */}
           <div>
             <label
               htmlFor="network"
               className={labelClass}
             >
-              Card Network
-              <span className="ml-1 text-red-500">
-                *
-              </span>
+              Card Network *
             </label>
 
             <select
               id="network"
               {...register("network")}
-              aria-invalid={!!errors.network}
               className={inputClass}
             >
-              <option value="">
-                Select network
-              </option>
-              <option value="VISA">
-                Visa
-              </option>
+              <option value="">Select network</option>
+              <option value="VISA">Visa</option>
               <option value="MASTERCARD">
                 Mastercard
               </option>
-              <option value="JCB">
-                JCB
-              </option>
+              <option value="JCB">JCB</option>
               <option value="AMEX">
                 American Express
               </option>
@@ -185,40 +185,23 @@ export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: 
             )}
           </div>
 
-          {/* Last 4 Digits */}
           <div>
             <label
-              htmlFor="last-four-digit"
+              htmlFor="last_four_digit"
               className={labelClass}
             >
-              Last 4 Digits
-              <span className="ml-1 text-red-500">
-                *
-              </span>
+              Last 4 Digits *
             </label>
 
-            <div className="relative">
-              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-[#8A958C]">
-                ••••
-              </span>
-
-              <input
-                id="last-four-digit"
-                type="text"
-                inputMode="numeric"
-                maxLength={4}
-                {...register("last_four_digit", {
-                  validate: (value) =>
-                    /^\d{4}$/.test(String(value)) ||
-                    "Enter exactly 4 digits",
-                })}
-                placeholder="4242"
-                aria-invalid={
-                  !!errors.last_four_digit
-                }
-                className={`${inputClass} pl-12`}
-              />
-            </div>
+        <input
+          id="last_four_digit"
+          type="text"
+          inputMode="numeric"
+          maxLength={4}
+          {...register("last_four_digit")}
+          placeholder="4242"
+          className={inputClass}
+        />
 
             {errors.last_four_digit && (
               <p className={errorClass}>
@@ -228,22 +211,18 @@ export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: 
           </div>
         </div>
 
-        {/* Nickname */}
         <div>
           <label
             htmlFor="nickname"
             className={labelClass}
           >
             Card Nickname
-            <span className="ml-2 text-[10px] font-normal text-[#929A93]">
-              Optional
-            </span>
           </label>
 
           <input
             id="nickname"
             {...register("nickname")}
-            placeholder="e.g. Personal Visa, Work Card"
+            placeholder="e.g. Personal Visa"
             className={inputClass}
           />
 
@@ -252,50 +231,289 @@ export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: 
               {errors.nickname.message}
             </p>
           )}
-
-          <p className="mt-1.5 text-[11px] text-[#929A93]">
-            Use a nickname to identify this
-            card when assigning subscriptions.
-          </p>
         </div>
       </section>
 
-      {/* Security Note */}
-      <div className="rounded-[10px] border border-[#DCE6DC] bg-[#F3F7F2] px-4 py-3">
-        <div className="flex items-start gap-3">
-          <CreditCard
-            size={17}
-            className="mt-0.5 shrink-0 text-[#526B5D]"
+      {/* CREDIT INFORMATION */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#E8EBE5] pb-3">
+          <Wallet
+            size={16}
+            className="text-[#526B5D]"
           />
 
-          <div>
-            <p className="text-[12px] font-semibold text-[#405B49]">
-              Card Information
-            </p>
+          <h3 className="text-[13px] font-semibold text-[#26342F]">
+            Credit Information
+          </h3>
+        </div>
 
-            <p className="mt-1 text-[11px] leading-relaxed text-[#728579]">
-              Only enter the last four digits
-              of your card. Never enter your
-              full card number, CVV, or PIN.
-            </p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label
+              htmlFor="creditLimit"
+              className={labelClass}
+            >
+              Credit Limit
+            </label>
+
+            <input
+              id="creditLimit"
+              type="number"
+              step="0.01"
+              min="0"
+              {...register("creditLimit", {
+                valueAsNumber: true,
+              })}
+              placeholder="100000.00"
+              className={inputClass}
+            />
+
+            {errors.creditLimit && (
+              <p className={errorClass}>
+                {errors.creditLimit.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="currencyCode"
+              className={labelClass}
+            >
+              Currency
+            </label>
+
+            <select
+              id="currencyCode"
+              {...register("currencyCode")}
+              className={inputClass}
+            >
+              <option value="PHP">PHP</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+
+            {errors.currencyCode && (
+              <p className={errorClass}>
+                {errors.currencyCode.message}
+              </p>
+            )}
           </div>
         </div>
+      </section>
+
+      {/* BILLING INFORMATION */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#E8EBE5] pb-3">
+          <CalendarDays
+            size={16}
+            className="text-[#526B5D]"
+          />
+
+          <h3 className="text-[13px] font-semibold text-[#26342F]">
+            Billing Information
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label
+              htmlFor="statementDay"
+              className={labelClass}
+            >
+              Statement Day
+            </label>
+
+            <input
+              id="statementDay"
+              type="number"
+              min="1"
+              max="31"
+              {...register("statementDay", {
+                setValueAs: (value) =>
+                  value === ""
+                    ? null
+                    : Number(value),
+              })}
+              placeholder="e.g. 15"
+              className={inputClass}
+            />
+
+            {errors.statementDay && (
+              <p className={errorClass}>
+                {errors.statementDay.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="dueDay"
+              className={labelClass}
+            >
+              Payment Due Day
+            </label>
+
+            <input
+              id="dueDay"
+              type="number"
+              min="1"
+              max="31"
+              {...register("dueDay", {
+                setValueAs: (value) =>
+                  value === ""
+                    ? null
+                    : Number(value),
+              })}
+              placeholder="e.g. 5"
+              className={inputClass}
+            />
+
+            {errors.dueDay && (
+              <p className={errorClass}>
+                {errors.dueDay.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <p className="text-[11px] text-[#929A93]">
+          Enter the statement closing day and
+          payment due day provided by your bank.
+        </p>
+      </section>
+
+      {/* EXPIRY INFORMATION */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#E8EBE5] pb-3">
+          <CalendarDays
+            size={16}
+            className="text-[#526B5D]"
+          />
+
+          <h3 className="text-[13px] font-semibold text-[#26342F]">
+            Card Expiration
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label
+              htmlFor="expiryMonth"
+              className={labelClass}
+            >
+              Expiry Month
+            </label>
+
+            <select
+              id="expiryMonth"
+              {...register("expiryMonth", {
+                setValueAs: (value) =>
+                  value === ""
+                    ? null
+                    : Number(value),
+              })}
+              className={inputClass}
+            >
+              <option value="">Select month</option>
+              {Array.from(
+                { length: 12 },
+                (_, i) => i + 1
+              ).map((month) => (
+                <option
+                  key={month}
+                  value={month}
+                >
+                  {String(month).padStart(2, "0")}
+                </option>
+              ))}
+            </select>
+
+            {errors.expiryMonth && (
+              <p className={errorClass}>
+                {errors.expiryMonth.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="expiryYear"
+              className={labelClass}
+            >
+              Expiry Year
+            </label>
+
+            <input
+              id="expiryYear"
+              type="number"
+              {...register("expiryYear", {
+                setValueAs: (value) =>
+                  value === ""
+                    ? null
+                    : Number(value),
+              })}
+              placeholder="e.g. 2029"
+              className={inputClass}
+            />
+
+            {errors.expiryYear && (
+              <p className={errorClass}>
+                {errors.expiryYear.message}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* CARD STATUS */}
+      <section>
+        <label
+          htmlFor="status"
+          className={labelClass}
+        >
+          Card Status
+        </label>
+
+        <select
+          id="status"
+          {...register("status")}
+          className={inputClass}
+        >
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+          <option value="BLOCKED">Blocked</option>
+          <option value="EXPIRED">Expired</option>
+        </select>
+
+        {errors.status && (
+          <p className={errorClass}>
+            {errors.status.message}
+          </p>
+        )}
+      </section>
+
+      {/* SECURITY NOTE */}
+      <div className="rounded-[10px] border border-[#DCE6DC] bg-[#F3F7F2] px-4 py-3">
+        <p className="text-[12px] font-semibold text-[#405B49]">
+          Card Information Security
+        </p>
+
+        <p className="mt-1 text-[11px] leading-relaxed text-[#728579]">
+          Only enter the last four digits
+          of your credit card. Never enter
+          your full card number, CVV, or PIN.
+        </p>
       </div>
 
-      {/* Footer Actions */}
+      {/* ACTIONS */}
       <div className="flex flex-col-reverse gap-2 border-t border-[#E8EBE5] pt-4 sm:flex-row sm:justify-end">
         <button
           type="button"
           onClick={onClose}
           disabled={busy}
-          className="
-            h-10 rounded-[9px]
-            border border-[#DCE2D9]
-            bg-white px-5 text-[12px]
-            font-medium text-[#526058]
-            transition hover:bg-[#F2F4EF]
-            disabled:opacity-50
-          "
+          className="h-10 rounded-[9px] border border-[#DCE2D9] bg-white px-5 text-[12px] font-medium text-[#526058] hover:bg-[#F2F4EF] disabled:opacity-50"
         >
           Cancel
         </button>
@@ -303,16 +521,7 @@ export default function AddModalCreditCard({onClose,onSubmit,isSaving = false}: 
         <button
           type="submit"
           disabled={busy}
-          className="
-            inline-flex h-10 items-center
-            justify-center gap-2
-            rounded-[9px] bg-[#26342F]
-            px-5 text-[12px] font-semibold
-            text-white transition
-            hover:bg-[#374B40]
-            disabled:cursor-not-allowed
-            disabled:opacity-60
-          "
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-[9px] bg-[#26342F] px-5 text-[12px] font-semibold text-white hover:bg-[#374B40] disabled:opacity-60"
         >
           {busy ? (
             <>

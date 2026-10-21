@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as serviceCard from '../services/creditCard';
 import { CreditCard2, CreditCardSchema } from "@repo/shared";
 
@@ -53,5 +53,14 @@ export function useEditCard() {
         }),
       ]);
     },
+  });
+}
+
+
+export function useGetCreditCards() {
+  return useQuery({
+    queryKey: ["credit-card-list"],
+    queryFn: serviceCard.getCreditCardsService,
+    staleTime: 1000 * 60 * 5,
   });
 }

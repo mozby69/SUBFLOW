@@ -12,8 +12,6 @@ router.post("/create-subscription",authorize({roles:["ADMIN","USER"]}),Subscript
 router.get("/display-sub",authorize({roles:["ADMIN","USER"]}),SubscriptionControllerList.getSubscriptionController);
 router.patch('/update-sub/:id',authorize({roles:["USER"]}),SubscriptionControllerList.updatePensionerController);
 router.delete('/delete-sub/:id',authorize({roles:["USER"]}),SubscriptionControllerList.deleteSubscriptionController);
-router.post("/create-card",authorize({roles:["ADMIN","USER"]}),SubscriptionControllerList.createCreditCardController);
-router.get("/credit-list",authorize({ roles: ["ADMIN", "USER"] }),SubscriptionControllerList.getCreditCardsController);
 router.patch('/update-card/:id',authorize({roles:["USER"]}),SubscriptionControllerList.updateCardController);
 
 export default router;

@@ -99,10 +99,3 @@ export function useDeleteSubscription(){
 
 
  
-export function useGetCreditCards() {
-  return useQuery({
-    queryKey: ["credit-card-list"],
-    queryFn: serviceSubscription.getCreditCardsService,
-    staleTime: 1000 * 60 * 5,
-  });
-}

@@ -3,17 +3,18 @@ import DataTable from "@/components/common/Datatable/Datatable";
 import Modal from "@/components/common/ModalHeader";
 import { TableColumn } from "@/components/common/Table";
 // import { useDisclosure } from "@/hooks/useDisclosure";
-import { dateFormatter, formatCurrency, UpdateSubscriptionSchema, type AddSubscriptionValues, type Subscription, type SubscriptionStatus } from "@repo/shared"; 
+import { CreateSubscriptionInput, dateFormatter, formatCurrency, UpdateSubscriptionSchema, type AddSubscriptionValues, type Subscription, type SubscriptionStatus } from "@repo/shared"; 
 import { CreditCard, Plus, RefreshCw } from "lucide-react";
 import {  useState } from "react";
 import AddModalSubscription from "../components/modal/AddSubscription";
-import { useCreateSubscription, useDeleteSubscription, useEditSubscription, useGetCreditCards, useGetSubscription } from "../hooks/useSubscription";
+import { useCreateSubscription, useDeleteSubscription, useEditSubscription, useGetSubscription } from "../hooks/useSubscription";
 import {  toast } from 'sonner'
 import { useDebounce } from "@/hooks/useDebounce";
 import SubscriptionActions from "@/components/ui/dropdownAction";
 import { useDisclosure } from "@/hooks/useDisclosure";
 import ModalEditSubscription from "../components/modal/EditSubscription";
 import SweetAlert from "@/lib/alerts/alert";
+import { useGetCreditCards } from "../../credit-card/hooks/useCreditCard";
 
 
 
@@ -270,19 +271,26 @@ const creditCards = creditCardResponse?.data ?? [];
     const totalRecords = subscriptionResponse?.pagination?.total ?? 0;
     const createSubscription = useCreateSubscription();
 
-    const handleCreateSubscription = async (values: AddSubscriptionValues): Promise<void> => {
-    try {
-      await createSubscription.mutateAsync(values);
-      toast.success("Subscription created successfully!");
+          const handleCreateSubscription = async (
+          values: CreateSubscriptionInput
+        ): Promise<void> => {
+          try {
+            await createSubscription.mutateAsync(values);
 
-      setIsAddOpen(false);
-    } catch (error: unknown) {
-      console.error("Failed to create subscription:", error);
+            toast.success("Subscription created successfully!");
 
-      toast.error("Failed to create subscription. Please try again.");
-    }
-  }
-  
+            setIsAddOpen(false);
+          } catch (error: unknown) {
+            console.error("Failed to create subscription:", error);
+
+            toast.error(
+              "Failed to create subscription. Please try again."
+            );
+
+            throw error;
+          }
+        };
+          
 
 
 

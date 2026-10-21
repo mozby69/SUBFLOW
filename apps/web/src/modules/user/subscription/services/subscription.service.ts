@@ -2,6 +2,7 @@ import api from "@/lib/api/api-client";
 import type {
   AddSubscriptionValues,
   ApiResponse,
+  CreateSubscriptionInput,
   CreditCard2,
   Subscription,
   UpdateSubscriptionSchema,
@@ -26,8 +27,8 @@ export type Params = {
 
 
 export const addSubscriptionService = {
-  async create(payload: AddSubscriptionValues): Promise<AddSubscriptionValues> {
-    const response = await api.post<ApiResponse<AddSubscriptionValues>>(
+  async create(payload: CreateSubscriptionInput) {
+    const response = await api.post(
       "/subscription/create-subscription",
       payload
     );
@@ -35,7 +36,6 @@ export const addSubscriptionService = {
     return response.data.data;
   },
 };
-
 
 export interface SubscriptionListResponse {
   success: boolean;
@@ -96,13 +96,3 @@ export async function deleteSubscriptionService(id: number): Promise<ApiResponse
 
 
 
-
-export async function getCreditCardsService():
-  Promise<ApiResponse<CreditCard2[]>> {
-
-  const response = await api.get<ApiResponse<CreditCard2[]>>(
-    "/subscription/credit-list"
-  );
-
-  return response.data;
-}

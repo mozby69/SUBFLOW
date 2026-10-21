@@ -13,8 +13,8 @@ import {
 } from "@repo/shared";
 
 import type { Subscription } from "@repo/shared";
-import { useGetCreditCards } from "../../hooks/useSubscription";
 import { useEffect } from "react";
+import { useGetCreditCards } from "@/modules/user/credit-card/hooks/useCreditCard";
 
 interface ModalEditSubscriptionProps {
   subscription: Subscription;

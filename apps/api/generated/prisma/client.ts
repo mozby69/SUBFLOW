@@ -67,10 +67,65 @@ export type Permission = Prisma.PermissionModel
  */
 export type RolePermission = Prisma.RolePermissionModel
 /**
+ * Model SubscriptionCategory
+ * 
+ */
+export type SubscriptionCategory = Prisma.SubscriptionCategoryModel
+/**
  * Model Subscription
  * 
  */
 export type Subscription = Prisma.SubscriptionModel
+/**
+ * Model SubscriptionBilling
+ * 
+ */
+export type SubscriptionBilling = Prisma.SubscriptionBillingModel
+/**
+ * Model SubscriptionPayment
+ * 
+ */
+export type SubscriptionPayment = Prisma.SubscriptionPaymentModel
+/**
+ * Model CardCharge
+ * 
+ */
+export type CardCharge = Prisma.CardChargeModel
+/**
+ * Model CardStatement
+ * 
+ */
+export type CardStatement = Prisma.CardStatementModel
+/**
+ * Model CardPayment
+ * 
+ */
+export type CardPayment = Prisma.CardPaymentModel
+/**
+ * Model SubscriptionPriceHistory
+ * 
+ */
+export type SubscriptionPriceHistory = Prisma.SubscriptionPriceHistoryModel
+/**
+ * Model Budget
+ * 
+ */
+export type Budget = Prisma.BudgetModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model ExchangeRate
+ * 
+ */
+export type ExchangeRate = Prisma.ExchangeRateModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel
 /**
  * Model CreditCard
  * 

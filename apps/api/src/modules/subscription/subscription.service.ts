@@ -1,30 +1,46 @@
-import { AddSubscriptionValues, CreditCard2, CreditCardSchema, UpdateSubscriptionSchema } from '@repo/shared';
+import { AddSubscriptionValues, CreateSubscriptionInput, CreditCard2, CreditCardSchema, UpdateSubscriptionSchema } from '@repo/shared';
 import * as subscriptionRepositoryList from './subscription.repository';
 import { QueryParams } from '../../../../../packages/shared/src/types/query.types';
 
 
-export async function createSubscription(params: AddSubscriptionValues) {
-  const {
-    subscriptionName,
-    amount,
-    billingCycle,
-    nextBilling,
-    category,
-    status,
-    creditCardId,
-  } = params;
+export async function createSubscription(
+  params: CreateSubscriptionInput
+) {
+  const billingDate = new Date(
+    `${params.nextBilling}T00:00:00.000Z`
+  );
 
   return subscriptionRepositoryList.addSubscription({
-    subscriptionName,
-    amount,
-    billingCycle,
-    nextBilling: new Date(`${nextBilling}T00:00:00.000Z`),
-    category,
-    status,
-    creditCardId,
+    subscriptionName: params.subscriptionName,
+    description: params.description ?? null,
+
+    amount: params.amount,
+    billingCycle: params.billingCycle,
+    nextBilling: billingDate,
+
+    currencyCode: params.currencyCode,
+
+    categoryId: params.categoryId ?? null,
+    category: params.category ?? null,
+
+    status: params.status,
+    creditCardId: params.creditCardId,
+
+    startDate: params.startDate
+      ? new Date(`${params.startDate}T00:00:00.000Z`)
+      : null,
+
+    endDate: params.endDate
+      ? new Date(`${params.endDate}T00:00:00.000Z`)
+      : null,
+
+    anchorDay:
+      params.anchorDay ?? billingDate.getUTCDate(),
+
+    autoRenew: params.autoRenew,
+    website: params.website ?? null,
   });
 }
-
 
 
 export async function getSubscriptionService(params: QueryParams) {
@@ -83,28 +99,8 @@ export async function deleteSubscription(id:number){
 }
 
 
-export async function createCreditCard( params: CreditCardSchema) {
-  const {
-    bank,
-    last_four_digit,
-    network,
-    nickname,
-  } = params;
-
-  return subscriptionRepositoryList.addCard({
-    bank,
-    last_four_digit,
-    network,
-    nickname: nickname ?? "",
-  });
-}
 
 
-
-
-export async function getCreditCards() {
-  return subscriptionRepositoryList.getCreditCards();
-}
 
 
 

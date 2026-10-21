@@ -16,18 +16,17 @@ import Modal from "@/components/common/ModalHeader";
 import {
   useCreateCreditCard,
   useEditCard,
+  useGetCreditCards,
 } from "../hooks/useCreditCard";
 
-import {
-  useGetCreditCards,
-} from "@/modules/user/subscription/hooks/useSubscription";
+
 
 import AddModalCreditCard from "../components/modal/addCard";
 import CreditCardItem, {
   type CreditCardItemData,
 } from "../components/ui/creditCardItem";
 
-import type { CreditCard2, CreditCardSchema } from "@repo/shared";
+import type { CreateCreditCardInput, CreditCardSchema } from "@repo/shared";
 import EditCard from "../components/modal/editCard";
 
 export default function CreditCardView() {
@@ -102,27 +101,27 @@ const handleUpdateCreditCard = async (
       )
     : null;
 
-  const handleCreateCreditCard = async (
-    values: CreditCardSchema
-  ): Promise<void> => {
-    try {
-      await createCreditCard.mutateAsync(values);
+ const handleCreateCreditCard = async (
+  values: CreateCreditCardInput
+): Promise<void> => {
+  try {
+    await createCreditCard.mutateAsync(values);
 
-      toast.success("Credit card added successfully!", {
-        duration: 3000,
-      });
+    toast.success("Credit card added successfully!", {
+      duration: 3000,
+    });
 
-      userModal.close();
-    } catch (error: unknown) {
-      console.error("Failed to create credit card:", error);
+    userModal.close();
+  } catch (error: unknown) {
+    console.error("Failed to create credit card:", error);
 
-      toast.error("Failed to add credit card.", {
-        duration: 4000,
-      });
+    toast.error("Failed to add credit card.", {
+      duration: 4000,
+    });
 
-      throw error;
-    }
-  };
+    throw error;
+  }
+};
 
   const closeModal = (): void => {
     if (createCreditCard.isPending) return;
