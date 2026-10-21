@@ -37,3 +37,25 @@ export type GenerateBillingInput =
 
 export type BillingQueryInput =
   z.infer<typeof billingQuerySchema>;
+
+
+export const recordBillingPaymentSchema = z.object({
+  amount: z.coerce.number()
+    .finite()
+    .positive("Payment amount must be greater than zero")
+    .refine(
+      (value) =>
+        Number.isSafeInteger(Math.round(value * 100)) &&
+        Math.abs(value * 100 - Math.round(value * 100)) < 1e-7,
+      "Amount must have at most two decimal places"
+    ),
+
+  remarks: z.string().trim().max(500).optional(),
+
+  referenceNumber: z.string().trim().max(100).optional(),
+
+  idempotencyKey: z.string().trim().min(1).max(100).optional(),
+});
+
+export type RecordBillingPaymentInput =
+  z.infer<typeof recordBillingPaymentSchema>;

@@ -13,6 +13,7 @@ type CreateCreditCardData = Omit<
   "expiryMonth" |
   "expiryYear"
 > & {
+  userId: number,
   nickname: string | null;
   statementDay: number | null;
   dueDay: number | null;
@@ -21,10 +22,15 @@ type CreateCreditCardData = Omit<
 };
 
 export async function addCreditCardRepo(
-  data: CreateCreditCardData
+  data: CreateCreditCardData,
 ) {
   return prisma.creditCard.create({
     data: {
+       user: {
+        connect: {
+          id: data.userId,
+        },
+      },
       bank: data.bank,
       last_four_digit: data.last_four_digit,
       network: data.network,

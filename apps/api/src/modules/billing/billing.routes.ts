@@ -6,6 +6,7 @@ import {
   getBillingByIdController,
   generateBillingsController,
   cancelBillingController,
+  recordBillingPaymentController,
 } from "./billing.controller";
 
 const router = Router();
@@ -29,5 +30,12 @@ router.patch(
   "/:id/cancel",
   cancelBillingController
 );
+
+
+router.post(
+  "/:id/payments",
+  recordBillingPaymentController
+);
+
 
 export default router;

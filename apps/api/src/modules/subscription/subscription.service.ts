@@ -4,13 +4,16 @@ import { QueryParams } from '../../../../../packages/shared/src/types/query.type
 
 
 export async function createSubscription(
-  params: CreateSubscriptionInput
+  params: CreateSubscriptionInput,
+  userId: number
 ) {
   const billingDate = new Date(
     `${params.nextBilling}T00:00:00.000Z`
   );
 
   return subscriptionRepositoryList.addSubscription({
+     userId,
+     
     subscriptionName: params.subscriptionName,
     description: params.description ?? null,
 

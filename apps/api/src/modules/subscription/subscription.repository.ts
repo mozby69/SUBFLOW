@@ -12,6 +12,7 @@ export interface CreateSubscriptionData
     CreateSubscriptionInput,
     "nextBilling" | "startDate" | "endDate"
   > {
+  userId: number;
   nextBilling: Date;
   startDate: Date | null;
   endDate: Date | null;
@@ -42,6 +43,8 @@ const nextBilling = shouldCreateBilling
     // STEP 1: Create the subscription.
     const subscription = await tx.subscription.create({
       data: {
+
+
         subscriptionName: data.subscriptionName,
         description: data.description,
 
@@ -66,6 +69,12 @@ const nextBilling = shouldCreateBilling
         card: {
           connect: {
             id: data.creditCardId,
+          },
+        },
+
+        user: {
+          connect: {
+            id: data.userId,
           },
         },
 

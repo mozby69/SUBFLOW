@@ -1,14 +1,16 @@
 
-import { BillingQueryInput } from "@repo/shared";
+import { BillingQueryInput, RecordBillingPaymentInput } from "@repo/shared";
 import { Prisma } from "../../../generated/prisma/client";
 
 
 import {
   findBillings,
   findBillingById,
+  recordBillingPayment,
 } from "./billing.repository";
 import { addBillingCycle, dateOnlyUTC, getTodayUTC } from "./billing.utils";
 import { prisma } from "@/lib/database/prisma";
+import { createNotificationService } from "../notifications/notifcation.service";
 
 
 
@@ -59,14 +61,22 @@ export async function generateBillingsService(
     );
   }
 
-  const subscriptions = await prisma.subscription.findMany({
-    where: {
-      status: "ACTIVE",
-      nextBilling: { not: null, lte: horizon },
-      amount: { not: null },
+const subscriptions = await prisma.subscription.findMany({
+  where: {
+    status: "ACTIVE",
+    autoRenew: true,
+    nextBilling: {
+      not: null,
+      lte: horizon,
     },
-    select: { id: true },
-  });
+    amount: {
+      not: null,
+    },
+  },
+  select: {
+    id: true,
+  },
+});
 
   let generated = 0;
   let skipped = 0;
@@ -86,16 +96,16 @@ export async function generateBillingsService(
           where: { id: item.id },
         });
 
-        if (
-          !subscription ||
-          subscription.status !== "ACTIVE" ||
-          !subscription.nextBilling ||
-          subscription.amount === null ||
-          subscription.nextBilling > horizon
-        ) {
-          return { generated: 0, skipped: 0 };
-        }
-
+       if (
+             !subscription ||
+            subscription.status !== "ACTIVE" ||
+            !subscription.autoRenew ||
+            !subscription.nextBilling ||
+            subscription.amount === null ||
+            subscription.nextBilling > horizon
+          ) {
+            return { generated: 0, skipped: 0 };
+          }
         let dueDate = dateOnlyUTC(
           subscription.nextBilling
         );
@@ -235,4 +245,28 @@ export async function cancelBillingService(id: number) {
       where: { id },
     });
   });
+}
+
+
+
+export async function recordBillingPaymentService(
+  billingId: number,
+  input: RecordBillingPaymentInput,
+  userId: number
+) {
+  const result = await recordBillingPayment(
+    billingId,
+    input
+  );
+
+  // Only for confirmed payments
+  await createNotificationService({
+    userId,
+    subscriptionId: result.billing.subscriptionId,
+    type: "PAYMENT_SUCCESS",
+    title: "Payment Successful",
+    message: `Your payment of ${result.payment.currencyCode} ${result.payment.amount} has been recorded successfully.`,
+  });
+
+  return result;
 }

@@ -131,3 +131,8 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type CreditCard = Prisma.CreditCardModel
+/**
+ * Model NotificationPreference
+ * 
+ */
+export type NotificationPreference = Prisma.NotificationPreferenceModel

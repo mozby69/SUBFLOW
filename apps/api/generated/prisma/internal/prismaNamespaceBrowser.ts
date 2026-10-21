@@ -68,7 +68,8 @@ export const ModelName = {
   Notification: 'Notification',
   ExchangeRate: 'ExchangeRate',
   AuditLog: 'AuditLog',
-  CreditCard: 'CreditCard'
+  CreditCard: 'CreditCard',
+  NotificationPreference: 'NotificationPreference'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -158,6 +159,7 @@ export type SubscriptionCategoryScalarFieldEnum = (typeof SubscriptionCategorySc
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
   subscriptionName: 'subscriptionName',
+  userId: 'userId',
   amount: 'amount',
   billingCycle: 'billingCycle',
   nextBilling: 'nextBilling',
@@ -313,6 +315,7 @@ export const NotificationScalarFieldEnum = {
   scheduledFor: 'scheduledFor',
   sentAt: 'sentAt',
   readAt: 'readAt',
+  deduplicationKey: 'deduplicationKey',
   createdAt: 'createdAt'
 } as const
 
@@ -367,6 +370,22 @@ export const CreditCardScalarFieldEnum = {
 } as const
 
 export type CreditCardScalarFieldEnum = (typeof CreditCardScalarFieldEnum)[keyof typeof CreditCardScalarFieldEnum]
+
+
+export const NotificationPreferenceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subscriptionReminder: 'subscriptionReminder',
+  billingReminder: 'billingReminder',
+  overdueAlert: 'overdueAlert',
+  cardReminder: 'cardReminder',
+  paymentConfirmation: 'paymentConfirmation',
+  reminderDays: 'reminderDays',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationPreferenceScalarFieldEnum = (typeof NotificationPreferenceScalarFieldEnum)[keyof typeof NotificationPreferenceScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -502,7 +521,8 @@ export type BudgetOrderByRelevanceFieldEnum = (typeof BudgetOrderByRelevanceFiel
 
 export const NotificationOrderByRelevanceFieldEnum = {
   title: 'title',
-  message: 'message'
+  message: 'message',
+  deduplicationKey: 'deduplicationKey'
 } as const
 
 export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]
