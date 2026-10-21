@@ -65,7 +65,6 @@ export default function ModalEditSubscription({
     register,
     handleSubmit,
     reset,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<AddSubscriptionValues>({
     resolver: zodResolver(addSubscriptionSchema),
@@ -78,6 +77,9 @@ export default function ModalEditSubscription({
       status: subscription.status,
       creditCardId: subscription.creditCardId,
       category: subscription.category,
+      startDate: toDateInput(subscription.startDate),
+      endDate: toDateInput(subscription.endDate),
+      anchorDay: Number(subscription.anchorDay),
     },
   });
 
@@ -90,6 +92,9 @@ export default function ModalEditSubscription({
     status: subscription.status,
     creditCardId: subscription.creditCardId,
     category: subscription.category,
+    startDate: toDateInput(subscription.startDate),
+    endDate: toDateInput(subscription.endDate),
+    anchorDay: Number(subscription.anchorDay),
   });
 }, [subscription, reset]);
 
@@ -326,6 +331,84 @@ const creditCards = creditCardResponse?.data ?? [];
           </p>
         )}
       </div>
+
+
+
+
+      {/* billing */}
+           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label
+            htmlFor="edit-start-date"
+            className={labelClass}
+          >
+            Start Date
+          </label>
+
+          <input
+            id="edit-start-date"
+            type="date"
+            {...register("startDate")}
+            className={inputClass}
+          />
+
+          {errors.startDate && (
+            <p className={errorClass}>
+              {errors.startDate.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="edit-end-date"
+            className={labelClass}
+          >
+            End Date
+          </label>
+
+          <input
+            id="edit-end-date"
+            type="date"
+            {...register("endDate")}
+            className={inputClass}
+          />
+
+          {errors.endDate && (
+            <p className={errorClass}>
+              {errors.endDate.message}
+            </p>
+          )}
+        </div>
+
+   
+      </div>
+
+      {/* billing */}
+
+
+         <div>
+          <label
+            htmlFor="edit-start-date"
+            className={labelClass}
+          >
+            Billing Anchor Day
+          </label>
+
+          <input
+            id="edit-anchor-day"
+            type="number"
+            {...register("anchorDay")}
+            className={inputClass}
+          />
+
+          {errors.anchorDay && (
+            <p className={errorClass}>
+              {errors.anchorDay.message}
+            </p>
+          )}
+        </div>
+
 
       {/* Actions */}
       <div className="flex justify-end gap-3 border-t border-[#E3E7E0] pt-5">

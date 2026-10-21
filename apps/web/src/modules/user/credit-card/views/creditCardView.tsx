@@ -22,32 +22,29 @@ import {
 
 
 import AddModalCreditCard from "../components/modal/addCard";
-import CreditCardItem, {
-  type CreditCardItemData,
-} from "../components/ui/creditCardItem";
+import CreditCardItem from "../components/ui/creditCardItem";
 
-import type { CreateCreditCardInput, CreditCardSchema } from "@repo/shared";
+import type { CreateCreditCardInput, CreditCard2, CreditCardSchema } from "@repo/shared";
 import EditCard from "../components/modal/editCard";
 
 export default function CreditCardView() {
     const userModal = useDisclosure();
     const userModal2 = useDisclosure();
     const createCreditCard = useCreateCreditCard();
-    const [selectedCard, setSelectedCard] = useState<CreditCardItemData | null>(null);
+    const [selectedCard, setSelectedCard] = useState<CreditCard2 | null>(null);
     const editModal = useDisclosure();
     const editCreditCard = useEditCard();
 
     const {
         data: creditCardResponse,
         isPending,
-        isFetching,
         isError,
         refetch,
     } = useGetCreditCards();
 
 
 const handleEdit = (
-  card: CreditCardItemData
+  card: CreditCard2
 ): void => {
   setSelectedCard(card);
   editModal.open();
@@ -84,7 +81,7 @@ const handleUpdateCreditCard = async (
 };
 
   // Assumes the GET service returns { success, data: CreditCard[] }.
-  const creditCards: CreditCardItemData[] =
+  const creditCards: CreditCard2[] =
     creditCardResponse?.data ?? [];
 
   const totalCards = creditCards.length;

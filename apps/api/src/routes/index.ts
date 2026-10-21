@@ -5,6 +5,7 @@ import dashboardRoutes from "@/modules/admin/dashboard/dashboard.routes";
 import subscriptionRoutes from "@/modules/subscription/subscription.routes";
 import bilingRoutes from "@/modules/billing/billing.routes";
 import creditCardRoutes from "@/modules/credit-card/credit-card.route";
+import calendarRoutes from "@/modules/calendar/calendar.route";
 import { authenticate } from '@/middleware/authenticate.middleware';
 
 const router = Router();
@@ -25,8 +26,9 @@ router.use(
 
 router.use("/subscription",authenticate,subscriptionRoutes);
 
-router.use("/billing", authenticate, bilingRoutes )
-router.use("/credit-card", authenticate, creditCardRoutes )
+router.use("/billing", authenticate, bilingRoutes)
+router.use("/credit-card", authenticate, creditCardRoutes)
+router.use("/calendar",authenticate,calendarRoutes);
 
 
 export default router;

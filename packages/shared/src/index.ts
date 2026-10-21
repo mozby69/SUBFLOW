@@ -4,3 +4,4 @@ export * from "./constants/index";
 export * from "./utils/index";
 export * from "./socket/";
 export * from "./types/user/subscription";
+export * from "./types/user/calendar/calendar.types";

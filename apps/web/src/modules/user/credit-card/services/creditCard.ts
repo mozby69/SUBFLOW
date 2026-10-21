@@ -13,7 +13,7 @@ export const createAddCardService = async (
   params: CreateCreditCardInput
 ) => {
   const res = await api.post(
-    "/subscription/create-card",
+    "/credit-card/create-card",
     params
   );
 

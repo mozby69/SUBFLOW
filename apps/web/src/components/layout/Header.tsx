@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import {
   Bell,
-  Plus,
   Menu,
 } from "lucide-react";
 

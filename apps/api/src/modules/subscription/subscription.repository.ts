@@ -141,7 +141,9 @@ export async function displaySubscription(params: QueryParams) {
         paymentCard: true,
         category: true,
         status: true,
-
+        startDate:true,
+        endDate:true,
+        anchorDay:true,
         // Foreign key
         creditCardId: true,
 
@@ -197,20 +199,19 @@ export async function editSubscription(
       subscriptionName: data.subscriptionName,
       amount: data.amount,
       billingCycle: data.billingCycle,
-
-      nextBilling: new Date(
-        `${data.nextBilling}T00:00:00.000Z`
-      ),
-
+      nextBilling: new Date(`${data.nextBilling}T00:00:00.000Z`),
       category: data.category,
       status: data.status,
-
+      startDate: new Date(`${data.startDate}T00:00:00.000Z`),
+      endDate: new Date(`${data.endDate}T00:00:00.000Z`),
+      anchorDay: data.anchorDay,
       // Update the credit card foreign key
       card: {
         connect: {
           id: data.creditCardId,
         },
       },
+
     },
     include: {
       card: true,
@@ -273,6 +274,13 @@ export async function editCard(id: number,data: CreditCard2) {
         last_four_digit: data.last_four_digit,
         network: data.network,
         nickname: data.nickname,
+        creditLimit: data.creditLimit,
+        currencyCode: data.currencyCode,
+        statementDay: data.statementDay,
+        dueDay: data.dueDay,
+        expiryMonth: data.expiryMonth,
+        expiryYear: data.expiryYear,
+        status: data.status,
 
       },
     });
