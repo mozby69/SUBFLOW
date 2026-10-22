@@ -2005,6 +2005,7 @@ export const CreditCardScalarFieldEnum = {
   status: 'status',
   expiryMonth: 'expiryMonth',
   expiryYear: 'expiryYear',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

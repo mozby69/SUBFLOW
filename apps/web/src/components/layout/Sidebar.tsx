@@ -76,7 +76,7 @@ export default function Sidebar() {
           bg-[#EEEFEA]
           transition-[width,transform] duration-300 ease-in-out
           w-56
-          ${collapsed ? "lg:w-[72px]" : "lg:w-[224px]"}
+          ${collapsed ? "lg:w-18" : "lg:w-56"}
           ${
             mobileOpen
               ? "translate-x-0"

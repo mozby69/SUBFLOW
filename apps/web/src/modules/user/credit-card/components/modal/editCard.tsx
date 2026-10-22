@@ -10,14 +10,14 @@ import {
 } from "lucide-react";
 
 import {
+  CreditCard2,
   creditCardSchema,
   type CreditCardSchema,
 } from "@repo/shared";
 
-import type { CreditCardItemData } from '../ui/creditCardItem';
 
 interface EditCardProps {
-  card: CreditCardItemData;
+  card: CreditCard2;
   onClose: () => void;
   onSubmit: (values: CreditCardSchema) => Promise<void>;
   isSaving?: boolean;
@@ -64,6 +64,13 @@ export default function EditCard({
       last_four_digit: card.last_four_digit,
       network: card.network,
       nickname: card.nickname ?? "",
+      creditLimit: card.creditLimit ?? 0,
+      currencyCode: card.currencyCode,
+      statementDay: card.statementDay ?? 0,
+      dueDay: card.dueDay ?? 0,
+      expiryMonth: card.expiryMonth,
+      expiryYear: card.expiryYear,
+      status: card.status,
     },
   });
 
@@ -213,6 +220,210 @@ export default function EditCard({
           A friendly name to help identify this card.
         </p>
       </div>
+
+      {/*credit limit currency */}
+
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+        <div>
+          <label
+            htmlFor="edit-credit-limit"
+            className={labelClass}
+          >
+            Credit Limit
+          </label>
+
+          <input
+            id="edit-credit-limit"
+            type="number"
+            inputMode="numeric"
+            maxLength={4}
+            {...register("creditLimit")}
+            className={inputClass}
+            aria-invalid={!!errors.creditLimit}
+          />
+
+          {errors.creditLimit && (
+            <p className={errorClass}>
+              {errors.creditLimit.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="edit-currency-code"
+            className={labelClass}
+          >
+            Currency
+          </label>
+
+          <select
+            id="edit-currency-code"
+            {...register("currencyCode")}
+            className={inputClass}>
+            <option value="">Select currency</option>
+            <option value="PHP">PHP</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+            <option value="EUR">EUR</option>
+          </select>
+
+          {errors.currencyCode && (
+            <p className={errorClass}>
+              {errors.currencyCode.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* billing info */}
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+        <div>
+          <label
+            htmlFor="edit-statement-day"
+            className={labelClass}
+          >
+            Statement Day
+          </label>
+
+         <input
+            id="edit-statement-day"
+            type="number"
+            min={1}
+            max={31}
+            {...register("statementDay", {
+              setValueAs: (value: string) =>
+                value === "" ? null : Number(value),
+            })}
+            className={inputClass}
+            aria-invalid={!!errors.statementDay}
+          />
+
+          {errors.statementDay && (
+            <p className={errorClass}>
+              {errors.statementDay.message}
+            </p>
+          )}
+        </div>
+
+         <div>
+          <label
+            htmlFor="edit-due-day"
+            className={labelClass}
+          >
+            Payment Due Date
+          </label>
+
+        <input
+          id="edit-due-day"
+          type="number"
+          min={1}
+          max={31}
+          {...register("dueDay", {
+            setValueAs: (value: string) =>
+              value === "" ? null : Number(value),
+          })}
+          className={inputClass}
+          aria-invalid={!!errors.dueDay}
+        />
+
+          {errors.dueDay && (
+            <p className={errorClass}>
+              {errors.dueDay.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* card expiration */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+        <div>
+          <label
+            htmlFor="edit-expiry-month"
+            className={labelClass}>
+            Expiry Month
+          </label>
+
+         <input
+            id="edit-expiry-month"
+            type="number"
+            min={1}
+            max={12}
+            {...register("expiryMonth", {
+              setValueAs: (value: string) =>
+                value === "" ? null : Number(value),
+            })}
+            className={inputClass}
+            aria-invalid={!!errors.expiryMonth}
+          />
+
+          {errors.expiryMonth && (
+            <p className={errorClass}>
+              {errors.expiryMonth.message}
+            </p>
+          )}
+        </div>
+
+         <div>
+          <label
+            htmlFor="edit-expiry-year"
+            className={labelClass}>
+            Expiry Year
+          </label>
+
+        <input
+          id="edit-expiry-year"
+          type="number"
+          min={1}
+          max={31}
+          {...register("expiryYear", {
+            setValueAs: (value: string) =>
+              value === "" ? null : Number(value),
+          })}
+          className={inputClass}
+          aria-invalid={!!errors.expiryYear}
+        />
+
+          {errors.expiryYear && (
+            <p className={errorClass}>
+              {errors.expiryYear.message}
+            </p>
+          )}
+        </div>
+
+
+          <div>
+            <label
+              htmlFor="edit-status"
+              className={labelClass}>
+              Card Status
+            </label>
+
+            <select
+              id="edit-status"
+              {...register("status")}
+              className={inputClass}>
+              <option value="">Select currency</option>
+              <option value="ACTIVE">Active</option>
+              <option value="BLOCKED">Blocked</option>
+              <option value="INACTIVE">Inactive</option>
+              <option value="EXPIRED">Expired</option>
+            </select>
+
+            {errors.status && (
+              <p className={errorClass}>
+                {errors.status.message}
+              </p>
+            )}
+        </div>
+      </div>
+
+
 
       {/* Footer */}
       <div className="flex flex-col-reverse gap-2 border-t border-[#E8EBE5] pt-5 sm:flex-row sm:justify-end">

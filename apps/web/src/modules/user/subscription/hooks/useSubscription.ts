@@ -13,13 +13,15 @@ export function useCreateSubscription() {
 
   return useMutation({
     mutationFn: serviceSubscription.addSubscriptionService.create,
-
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["subscription-display"],
       });
         await queryClient.invalidateQueries({
         queryKey: ["credit-card-list"],
+      });
+       await queryClient.invalidateQueries({
+        queryKey: ["billing-calendar"],
       });
     },
   });
@@ -70,6 +72,9 @@ export function useEditSubscription() {
        await queryClient.invalidateQueries({
         queryKey: ["credit-card-list"],
       });
+        await queryClient.invalidateQueries({
+        queryKey: ["billing-calendar"],
+      });
     },
   });
 }
@@ -89,6 +94,10 @@ export function useDeleteSubscription(){
             queryClient.invalidateQueries({
                 queryKey: ["credit-card-list"],
             });
+             queryClient.invalidateQueries({
+                queryKey: ["billing-calendar"],
+            });
+            
             
         },
     })

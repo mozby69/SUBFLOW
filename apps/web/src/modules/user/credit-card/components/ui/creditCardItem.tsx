@@ -1,5 +1,6 @@
 "use client";
 
+import { CreditCard2 } from "@repo/shared";
 import {
   CreditCard as CreditCardIcon,
   Pencil,
@@ -7,19 +8,19 @@ import {
   Wallet,
 } from "lucide-react";
 
-export interface CreditCardItemData {
-  id: number;
-  bank: string;
-  last_four_digit: number;
-  network: string;
-  nickname?: string | null;
-  subscriptionCount?: number;
-  monthlyEquivalent?: number;
-}
+// export interface CreditCardItemData {
+//   id: number;
+//   bank: string;
+//   last_four_digit: number;
+//   network: string;
+//   nickname?: string | null;
+//   subscriptionCount?: number;
+//   monthlyEquivalent?: number;
+// }
 
 interface CreditCardItemProps {
-  card: CreditCardItemData;
-  onEdit?: (card: CreditCardItemData) => void;
+  card: CreditCard2;
+  onEdit?: (card: CreditCard2) => void;
 }
 
 const currencyFormatter = new Intl.NumberFormat("en-PH", {

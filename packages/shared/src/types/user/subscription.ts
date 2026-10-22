@@ -17,6 +17,9 @@ export interface Subscription {
   status: SubscriptionStatus;
   paymentCard?: string;
   category: string;
+  startDate:string;
+  endDate:string;
+  anchorDay:number;
 
   creditCardId: number;
 
@@ -53,5 +56,19 @@ export interface CreditCard2 {
   nickname?: string | null;
   subscriptionCount?: number;
   monthlyEquivalent?: number;
+  creditLimit?: number;
+  currencyCode?:string;
+  statementDay?:number;
+  dueDay?:number;
+  expiryMonth?:number;
+  expiryYear?:number;
+  status?:cardStatus;
 }
+
+
+export type cardStatus =
+  | "ACTIVE"
+  | "INACTIVE"
+  | "BLOCKED"
+  | "EXPIRED";
 

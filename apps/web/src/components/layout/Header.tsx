@@ -2,7 +2,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import {
+  Menu,
+} from "lucide-react";
 
 import { navigation } from "@/config/navigation.config";
 import { useSidebar } from "./Sidebar-Context";

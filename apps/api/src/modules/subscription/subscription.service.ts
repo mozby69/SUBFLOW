@@ -72,6 +72,10 @@ export async function getSubscriptionService(params: QueryParams) {
 
     creditCardId: sub.creditCardId,
 
+    startDate: sub.startDate,
+    endDate: sub.endDate,
+    anchorDay: Number(sub.anchorDay ?? 0),
+
 
     card: {
       id: sub.card.id,

@@ -9,7 +9,8 @@ import {
     RefreshCcw,
     CreditCard,
     ReceiptText,
-    Bell
+    Bell,
+    Calendar1
 } from "lucide-react";
 
 import { NavigationItem } from "@/types/navigation.types";
@@ -50,6 +51,12 @@ export const navigation: NavigationItem[] = [
         title: "Billing",
         href: ROUTES.USER.BILLING, // temporary
         icon: ReceiptText,
+        roles: ["USER"],
+    },
+     {
+        title: "Calendar",
+        href: ROUTES.USER.CALENDAR, // temporary
+        icon: Calendar1,
         roles: ["USER"],
     },
 
