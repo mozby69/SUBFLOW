@@ -445,13 +445,13 @@ export default function EditCard({
 
         <button
           type="submit"
-          disabled={busy || !isDirty}
+          // disabled={busy || !isDirty}
           className="
             inline-flex h-10 items-center justify-center
             gap-2 rounded-[9px]
-            bg-[#26342F] px-5
+            bg-[#4F46E5] px-5
             text-[12px] font-semibold text-white
-            transition hover:bg-[#374B40]
+            transition hover:bg-[#4338CA]
             disabled:cursor-not-allowed
             disabled:opacity-50
           "

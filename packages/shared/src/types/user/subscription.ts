@@ -72,3 +72,9 @@ export type cardStatus =
   | "BLOCKED"
   | "EXPIRED";
 
+
+
+  export interface SubscriptionCateogory {
+    id:string;
+    description:string;
+  }

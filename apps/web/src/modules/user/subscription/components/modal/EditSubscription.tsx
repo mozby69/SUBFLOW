@@ -425,7 +425,7 @@ const creditCards = creditCardResponse?.data ?? [];
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#26342F] px-5 text-[12px] font-semibold text-white transition hover:bg-[#374B40] disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#4F46E5] px-5 text-[12px] font-semibold text-white transition hover:bg-[#4338CA] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Save size={15} />
 

@@ -19,7 +19,7 @@ function ProtectedLayoutContent({
   const { collapsed } = useSidebar();
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-[#F8F9F6]">
+    <div className="flex h-dvh overflow-hidden bg-[#F8F9FB]">
       {/* Fixed Sidebar */}
       <Sidebar />
 

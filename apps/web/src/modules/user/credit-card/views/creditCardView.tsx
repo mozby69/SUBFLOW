@@ -136,11 +136,11 @@ const handleUpdateCreditCard = async (
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#DCE2D9] bg-[#E9EEE8]">
+          <div  className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#DCE2EC] bg-[#E4E9FA]">
             <CreditCardIcon
               size={20}
               strokeWidth={1.7}
-              className="text-[#526B5D]"
+              className="text-[#303C87]"
             />
           </div>
 
@@ -161,10 +161,10 @@ const handleUpdateCreditCard = async (
           onClick={userModal.open}
           className="
             inline-flex h-10 items-center justify-center
-            gap-2 rounded-[10px] bg-[#26342F]
+            gap-2 rounded-[10px] bg-[#4F46E5]
             px-5 text-[12px] font-semibold text-white
-            shadow-sm transition-all duration-200
-            hover:bg-[#374B40] hover:shadow-md
+            transition-all duration-200
+            hover:bg-[#4338CA] hover:shadow-md
             active:scale-[0.98]
           "
         >
@@ -244,7 +244,7 @@ const handleUpdateCreditCard = async (
                   key={index}
                   className="animate-pulse rounded-2xl border border-[#E1E6DE] bg-white p-5"
                 >
-                  <div className="aspect-[1.75/1] rounded-2xl bg-[#E6EBE5]" />
+                  <div className="aspect-1.75/1 rounded-2xl bg-[#E6EBE5]" />
                   <div className="mt-5 h-4 w-3/4 rounded bg-[#E6EBE5]" />
                   <div className="mt-5 h-4 w-1/2 rounded bg-[#E6EBE5]" />
                   <div className="mt-6 h-10 rounded-lg bg-[#E6EBE5]" />

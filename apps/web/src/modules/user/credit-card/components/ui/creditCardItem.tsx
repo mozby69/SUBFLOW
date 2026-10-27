@@ -172,8 +172,8 @@ export default function CreditCardItem({
             border border-[#DCE2D9] bg-[#FCFCFA]
             text-[12px] font-semibold text-[#46574C]
             transition-colors
-            hover:border-[#AFC1B3]
-            hover:bg-[#F0F4EF]
+            hover:border-[#4F46E5]
+            hover:bg-[#F8F9FB]
             disabled:cursor-not-allowed
             disabled:opacity-50
           "

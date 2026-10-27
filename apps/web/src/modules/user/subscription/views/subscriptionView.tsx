@@ -223,7 +223,7 @@ const creditCards = creditCardResponse?.data ?? [];
             }
 
             return (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-[#F8F9FB]">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E9EEE8]">
                   <CreditCard
                     size={16}
@@ -326,11 +326,11 @@ return (
 
       <div className="flex min-w-0 items-start gap-3">
 
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#DCE2D9] bg-[#E9EEE8]">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#DCE2EC] bg-[#E4E9FA]">
           <RefreshCw
             size={20}
             strokeWidth={1.7}
-            className="text-[#526B5D]"
+        className="text-[#303C87]"
           />
         </div>
 
@@ -356,15 +356,15 @@ return (
         className="
           inline-flex h-10 shrink-0 items-center
           justify-center gap-2 rounded-[10px]
-          bg-[#26342F] px-4
+          bg-[#4F46E5] px-4
           text-[12px] font-semibold text-white
           shadow-sm transition-all duration-200
-          hover:bg-[#374B40]
+          hover:bg-[#4338CA]
           hover:shadow-md
           active:scale-[0.98]
           focus-visible:outline-none
           focus-visible:ring-2
-          focus-visible:ring-[#526B5D]
+          focus-visible:ring-[#4338CA]
           focus-visible:ring-offset-2
           sm:w-auto
         "

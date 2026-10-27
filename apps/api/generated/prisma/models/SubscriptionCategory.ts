@@ -199,11 +199,11 @@ export type SubscriptionCategoryGroupByArgs<ExtArgs extends runtime.Types.Extens
 
 export type SubscriptionCategoryGroupByOutputType = {
   id: number
-  name: string
+  name: string | null
   description: string | null
   color: string | null
   icon: string | null
-  isActive: boolean
+  isActive: boolean | null
   createdAt: Date
   updatedAt: Date
   _count: SubscriptionCategoryCountAggregateOutputType | null
@@ -233,11 +233,11 @@ export type SubscriptionCategoryWhereInput = {
   OR?: Prisma.SubscriptionCategoryWhereInput[]
   NOT?: Prisma.SubscriptionCategoryWhereInput | Prisma.SubscriptionCategoryWhereInput[]
   id?: Prisma.IntFilter<"SubscriptionCategory"> | number
-  name?: Prisma.StringFilter<"SubscriptionCategory"> | string
+  name?: Prisma.StringNullableFilter<"SubscriptionCategory"> | string | null
   description?: Prisma.StringNullableFilter<"SubscriptionCategory"> | string | null
   color?: Prisma.StringNullableFilter<"SubscriptionCategory"> | string | null
   icon?: Prisma.StringNullableFilter<"SubscriptionCategory"> | string | null
-  isActive?: Prisma.BoolFilter<"SubscriptionCategory"> | boolean
+  isActive?: Prisma.BoolNullableFilter<"SubscriptionCategory"> | boolean | null
   createdAt?: Prisma.DateTimeFilter<"SubscriptionCategory"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionCategory"> | Date | string
   subscriptions?: Prisma.SubscriptionListRelationFilter
@@ -246,11 +246,11 @@ export type SubscriptionCategoryWhereInput = {
 
 export type SubscriptionCategoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  name?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   icon?: Prisma.SortOrderInput | Prisma.SortOrder
-  isActive?: Prisma.SortOrder
+  isActive?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
@@ -267,7 +267,7 @@ export type SubscriptionCategoryWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"SubscriptionCategory"> | string | null
   color?: Prisma.StringNullableFilter<"SubscriptionCategory"> | string | null
   icon?: Prisma.StringNullableFilter<"SubscriptionCategory"> | string | null
-  isActive?: Prisma.BoolFilter<"SubscriptionCategory"> | boolean
+  isActive?: Prisma.BoolNullableFilter<"SubscriptionCategory"> | boolean | null
   createdAt?: Prisma.DateTimeFilter<"SubscriptionCategory"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionCategory"> | Date | string
   subscriptions?: Prisma.SubscriptionListRelationFilter
@@ -276,11 +276,11 @@ export type SubscriptionCategoryWhereUniqueInput = Prisma.AtLeast<{
 
 export type SubscriptionCategoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  name?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   icon?: Prisma.SortOrderInput | Prisma.SortOrder
-  isActive?: Prisma.SortOrder
+  isActive?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SubscriptionCategoryCountOrderByAggregateInput
@@ -295,21 +295,21 @@ export type SubscriptionCategoryScalarWhereWithAggregatesInput = {
   OR?: Prisma.SubscriptionCategoryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SubscriptionCategoryScalarWhereWithAggregatesInput | Prisma.SubscriptionCategoryScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"SubscriptionCategory"> | number
-  name?: Prisma.StringWithAggregatesFilter<"SubscriptionCategory"> | string
+  name?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionCategory"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionCategory"> | string | null
   color?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionCategory"> | string | null
   icon?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionCategory"> | string | null
-  isActive?: Prisma.BoolWithAggregatesFilter<"SubscriptionCategory"> | boolean
+  isActive?: Prisma.BoolNullableWithAggregatesFilter<"SubscriptionCategory"> | boolean | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionCategory"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionCategory"> | Date | string
 }
 
 export type SubscriptionCategoryCreateInput = {
-  name: string
+  name?: string | null
   description?: string | null
   color?: string | null
   icon?: string | null
-  isActive?: boolean
+  isActive?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutSubscriptionCategoryInput
@@ -318,11 +318,11 @@ export type SubscriptionCategoryCreateInput = {
 
 export type SubscriptionCategoryUncheckedCreateInput = {
   id?: number
-  name: string
+  name?: string | null
   description?: string | null
   color?: string | null
   icon?: string | null
-  isActive?: boolean
+  isActive?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutSubscriptionCategoryInput
@@ -330,11 +330,11 @@ export type SubscriptionCategoryUncheckedCreateInput = {
 }
 
 export type SubscriptionCategoryUpdateInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutSubscriptionCategoryNestedInput
@@ -343,11 +343,11 @@ export type SubscriptionCategoryUpdateInput = {
 
 export type SubscriptionCategoryUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutSubscriptionCategoryNestedInput
@@ -356,32 +356,32 @@ export type SubscriptionCategoryUncheckedUpdateInput = {
 
 export type SubscriptionCategoryCreateManyInput = {
   id?: number
-  name: string
+  name?: string | null
   description?: string | null
   color?: string | null
   icon?: string | null
-  isActive?: boolean
+  isActive?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type SubscriptionCategoryUpdateManyMutationInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SubscriptionCategoryUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -438,6 +438,10 @@ export type SubscriptionCategoryNullableScalarRelationFilter = {
   isNot?: Prisma.SubscriptionCategoryWhereInput | null
 }
 
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
 export type SubscriptionCategoryCreateNestedOneWithoutSubscriptionsInput = {
   create?: Prisma.XOR<Prisma.SubscriptionCategoryCreateWithoutSubscriptionsInput, Prisma.SubscriptionCategoryUncheckedCreateWithoutSubscriptionsInput>
   connectOrCreate?: Prisma.SubscriptionCategoryCreateOrConnectWithoutSubscriptionsInput
@@ -471,11 +475,11 @@ export type SubscriptionCategoryUpdateOneWithoutBudgetsNestedInput = {
 }
 
 export type SubscriptionCategoryCreateWithoutSubscriptionsInput = {
-  name: string
+  name?: string | null
   description?: string | null
   color?: string | null
   icon?: string | null
-  isActive?: boolean
+  isActive?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   budgets?: Prisma.BudgetCreateNestedManyWithoutCategoryInput
@@ -483,11 +487,11 @@ export type SubscriptionCategoryCreateWithoutSubscriptionsInput = {
 
 export type SubscriptionCategoryUncheckedCreateWithoutSubscriptionsInput = {
   id?: number
-  name: string
+  name?: string | null
   description?: string | null
   color?: string | null
   icon?: string | null
-  isActive?: boolean
+  isActive?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutCategoryInput
@@ -510,11 +514,11 @@ export type SubscriptionCategoryUpdateToOneWithWhereWithoutSubscriptionsInput = 
 }
 
 export type SubscriptionCategoryUpdateWithoutSubscriptionsInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   budgets?: Prisma.BudgetUpdateManyWithoutCategoryNestedInput
@@ -522,22 +526,22 @@ export type SubscriptionCategoryUpdateWithoutSubscriptionsInput = {
 
 export type SubscriptionCategoryUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type SubscriptionCategoryCreateWithoutBudgetsInput = {
-  name: string
+  name?: string | null
   description?: string | null
   color?: string | null
   icon?: string | null
-  isActive?: boolean
+  isActive?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutSubscriptionCategoryInput
@@ -545,11 +549,11 @@ export type SubscriptionCategoryCreateWithoutBudgetsInput = {
 
 export type SubscriptionCategoryUncheckedCreateWithoutBudgetsInput = {
   id?: number
-  name: string
+  name?: string | null
   description?: string | null
   color?: string | null
   icon?: string | null
-  isActive?: boolean
+  isActive?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutSubscriptionCategoryInput
@@ -572,11 +576,11 @@ export type SubscriptionCategoryUpdateToOneWithWhereWithoutBudgetsInput = {
 }
 
 export type SubscriptionCategoryUpdateWithoutBudgetsInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutSubscriptionCategoryNestedInput
@@ -584,11 +588,11 @@ export type SubscriptionCategoryUpdateWithoutBudgetsInput = {
 
 export type SubscriptionCategoryUncheckedUpdateWithoutBudgetsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutSubscriptionCategoryNestedInput
@@ -676,11 +680,11 @@ export type $SubscriptionCategoryPayload<ExtArgs extends runtime.Types.Extension
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    name: string
+    name: string | null
     description: string | null
     color: string | null
     icon: string | null
-    isActive: boolean
+    isActive: boolean | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["subscriptionCategory"]>

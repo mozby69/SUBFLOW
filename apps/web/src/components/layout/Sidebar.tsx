@@ -4,10 +4,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-
   Layers3,
   LogOut,
-
   X,
 } from "lucide-react";
 
@@ -22,7 +20,6 @@ export default function Sidebar() {
   const {
     collapsed,
     mobileOpen,
- 
     closeMobile,
   } = useSidebar();
 
@@ -72,8 +69,8 @@ export default function Sidebar() {
         className={`
           fixed inset-y-0 left-0 z-50
           flex h-dvh flex-col
-          border-r border-[#DDDED8]
-          bg-[#EEEFEA]
+          border-r border-[#DCE2EC]
+          bg-[#EDF1F9]
           transition-[width,transform] duration-300 ease-in-out
           w-56
           ${collapsed ? "lg:w-18" : "lg:w-56"}
@@ -88,11 +85,11 @@ export default function Sidebar() {
         <div
           className={`
             flex h-20.5 shrink-0 items-center
-            border-b border-[#DDDED8]
+            border-b border-[#DCE2EC]
             ${collapsed ? "lg:justify-center lg:px-2" : "px-5"}
           `}
         >
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#26342F] text-white">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#171B4B] text-white">
             <Layers3 size={18} strokeWidth={1.7} />
           </div>
 
@@ -102,10 +99,10 @@ export default function Sidebar() {
               ${collapsed ? "lg:hidden" : ""}
             `}
           >
-            <h2 className="text-[16px] font-semibold leading-tight text-[#202A26]">
+            <h2 className="text-[16px] font-semibold leading-tight text-[#171B35]">
               SUBFLOW
             </h2>
-            <p className="mt-0.5 whitespace-nowrap text-[10px] text-[#929992]">
+            <p className="mt-0.5 whitespace-nowrap text-[10px] text-[#667085]">
               User workspace
             </p>
           </div>
@@ -115,13 +112,12 @@ export default function Sidebar() {
             type="button"
             onClick={closeMobile}
             aria-label="Close sidebar"
-            className="ml-auto rounded-lg p-1.5 text-[#526B5D] hover:bg-[#DCE1DA] lg:hidden"
+            className="ml-auto rounded-lg p-1.5 text-[#475467] hover:bg-[#E2E7F7] lg:hidden"
           >
             <X size={18} />
           </button>
         </div>
 
-      
         {/* Navigation */}
         <nav
           aria-label="Main navigation"
@@ -154,8 +150,8 @@ export default function Sidebar() {
                   ${collapsed ? "lg:justify-center lg:px-0" : ""}
                   ${
                     active
-                      ? "bg-[#DCE1DA] text-[#26342F]"
-                      : "text-[#858D86] hover:bg-[#E2E5DF] hover:text-[#26342F]"
+                      ? "bg-[#DCE2FF] text-[#171B4B]"
+                      : "text-[#344054] hover:bg-[#E2E7F7] hover:text-[#171B4B]"
                   }
                 `}
               >
@@ -189,29 +185,29 @@ export default function Sidebar() {
           <div
             className={`
               mb-4 rounded-[14px]
-              border border-[#D9DDD6]
-              bg-[#F5F6F2] p-3
+              border border-[#DCE2EC]
+              bg-[#F8FAFD] p-3
               ${collapsed ? "lg:hidden" : ""}
             `}
           >
-            <div className="mb-3 flex h-7 w-7 items-center justify-center rounded-lg bg-[#E0E6DE]">
+            <div className="mb-3 flex h-7 w-7 items-center justify-center rounded-lg bg-[#E4E9FA]">
               <Layers3
                 size={14}
-                className="text-[#526B5D]"
+                className="text-[#303C87]"
               />
             </div>
 
-            <p className="text-[12px] font-semibold text-[#27332C]">
+            <p className="text-[12px] font-semibold text-[#171B35]">
               Workspace overview
             </p>
 
-            <p className="mt-1 text-[11px] leading-relaxed text-[#929A93]">
+            <p className="mt-1 text-[11px] leading-relaxed text-[#667085]">
               Manage your workspace and access controls.
             </p>
           </div>
 
           {/* Profile */}
-          <div className="border-t border-[#D9DDD6] pt-3">
+          <div className="border-t border-[#DCE2EC] pt-3">
             <div
               className={`
                 flex items-center gap-2 rounded-lg px-1 py-2
@@ -223,8 +219,8 @@ export default function Sidebar() {
                 className="
                   flex h-8 w-8 shrink-0 items-center
                   justify-center rounded-full
-                  bg-[#D8DFD8] text-[10px]
-                  font-semibold text-[#26342F]
+                  bg-[#E0E5FF] text-[10px]
+                  font-semibold text-[#303C87]
                 "
               >
                 {initials}
@@ -236,10 +232,10 @@ export default function Sidebar() {
                   ${collapsed ? "lg:hidden" : ""}
                 `}
               >
-                <p className="truncate text-[11px] font-semibold text-[#26342F]">
+                <p className="truncate text-[11px] font-semibold text-[#171B35]">
                   {user?.name ?? "User"}
                 </p>
-                <p className="truncate text-[10px] text-[#909890]">
+                <p className="truncate text-[10px] text-[#667085]">
                   {user?.username ?? "Account"}
                 </p>
               </div>
@@ -253,8 +249,8 @@ export default function Sidebar() {
               className={`
                 mt-1 flex w-full items-center gap-3
                 rounded-lg px-3 py-2 text-[12px]
-                text-[#7F8880] transition-colors
-                hover:bg-[#E2E5DF] hover:text-[#26342F]
+                text-[#667085] transition-colors
+                hover:bg-[#E2E7F7] hover:text-[#171B4B]
                 ${collapsed ? "lg:justify-center lg:px-0" : ""}
               `}
             >

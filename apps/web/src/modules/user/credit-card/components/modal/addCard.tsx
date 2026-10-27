@@ -521,7 +521,7 @@ const {
         <button
           type="submit"
           disabled={busy}
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-[9px] bg-[#26342F] px-5 text-[12px] font-semibold text-white hover:bg-[#374B40] disabled:opacity-60"
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-[9px] bg-[#4F46E5] px-5 text-[12px] font-semibold text-white hover:bg-[#4338CA] disabled:opacity-60"
         >
           {busy ? (
             <>

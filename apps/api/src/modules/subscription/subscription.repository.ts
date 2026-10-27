@@ -2,7 +2,7 @@ import { prisma } from "@/lib/database/prisma";
 import { billing_cycle, status_subscription } from "../../../generated/prisma/enums";
 import { QueryParams } from "../../../../../packages/shared/src/types/query.types";
 import { Prisma, Subscription } from "../../../generated/prisma/client";
-import { AddSubscriptionValues, CreateSubscriptionInput, CreditCard2, UpdateSubscriptionSchema } from "@repo/shared";
+import { AddSubscriptionValues, CreateSubscriptionInput, CreditCard2, SubscriptionCateogory, UpdateSubscriptionSchema } from "@repo/shared";
 import { calculateNextBillingDate } from "../billing/billing.utils";
 
 
@@ -288,4 +288,20 @@ export async function editCard(id: number,data: CreditCard2) {
 
     return cardata;
   });
+}
+
+
+
+
+
+
+
+export async function addSubscriptionCategory(data: SubscriptionCateogory) {
+  return prisma.subscriptionCategory.create({
+    data: {
+      description: data.description,
+
+    },
+  });
+
 }

@@ -130,19 +130,23 @@ export default function CalendarView() {
 };
 
   return (
-    <div className="w-full min-w-0 space-y-6 p-2">
+    <div className="w-full min-w-0 space-y-6 bg-[#F8F9FB]">
+          
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#DCE2D9] bg-[#E9EEE8]">
-            <CalendarDays size={20} className="text-[#526B5D]" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#DCE2EC] bg-[#E4E9FA]">
+            <CalendarDays
+              size={20}
+              className="text-[#303C87]"
+            />
           </div>
 
           <div>
-            <h1 className="text-[22px] font-semibold text-[#26342F]">
+            <h1 className="text-[22px] font-semibold text-[#171B35]">
               Billing Calendar
             </h1>
 
-            <p className="mt-1 text-[13px] text-[#8A958C]">
+            <p className="mt-1 text-[13px] text-[#667085]">
               Track scheduled subscription payments and due dates.
             </p>
           </div>
@@ -151,11 +155,12 @@ export default function CalendarView() {
         <button
           type="button"
           onClick={navigateToday}
-          className="rounded-lg border border-[#DCE2D9] bg-white px-4 py-2.5 text-xs font-medium text-[#526057] hover:bg-[#F2F4EF]"
+          className="rounded-lg border border-[#DCE2EC] bg-white px-4 py-2.5 text-xs font-medium text-[#475467] hover:bg-[#EEF1F8]"
         >
           Today
         </button>
       </div>
+
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <SummaryCard
@@ -251,14 +256,16 @@ export default function CalendarView() {
                 const isSelected = key === selectedDate;
 
                 return (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setSelectedDate(key)}
-                    className={`min-h-31.25 min-w-0 border-b border-r border-[#E5E9E4] p-2 text-left align-top transition hover:bg-[#F7FAF7] ${
-                      isSelected ? "bg-[#F0F6F0]" : "bg-white"
-                    }`}
-                  >
+               
+        <button
+          key={key}
+          type="button"
+          onClick={() => setSelectedDate(key)}
+          className={`min-h-31.25 min-w-0 border-b border-r border-[#E1E5ED] p-2 text-left align-top transition hover:bg-[#F1F4FF] ${
+            isSelected ? "bg-[#E8ECFF]" : "bg-white"
+          }`}
+        >
+
                     <span
                       className={`mb-2 flex h-7 w-7 items-center justify-center rounded-full text-[12px] ${
                         isToday
@@ -455,7 +462,7 @@ export default function CalendarView() {
       <button
         type="button"
         onClick={closeBillingModal}
-        className="h-10 rounded-lg bg-[#26342F] px-6 text-[12px] font-semibold text-white transition hover:bg-[#374B40]"
+        className="h-10 rounded-lg bg-[#4F46E5] px-6 text-[12px] font-semibold text-white transition hover:bg-[#4338CA]"
       >
         Close
       </button>
@@ -472,6 +479,7 @@ export default function CalendarView() {
       </p>
     </div>
   );
+  
 }
 
 function SummaryCard({

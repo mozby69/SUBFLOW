@@ -211,7 +211,7 @@ function SummaryCard({
   iconClass: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-[#F8F9FB] p-5 shadow-sm">
       <div className="flex items-start justify-between">
         <p className="text-sm font-medium text-slate-500">
           {title}

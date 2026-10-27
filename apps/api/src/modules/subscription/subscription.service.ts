@@ -113,3 +113,19 @@ export async function updateCard(id:number, data:CreditCard2){
     return result;
 }
 
+
+
+
+// export async function createSubscriptionCategory(
+//   params: SubscriptionCateogory
+// ) {
+//   const billingDate = new Date(
+//     `${params.nextBilling}T00:00:00.000Z`
+//   );
+
+//   return subscriptionRepositoryList.addSubscriptionCategory({
+//     subscriptionName: params.description,
+//     description: params.description ?? null,
+
+//   });
+// }
