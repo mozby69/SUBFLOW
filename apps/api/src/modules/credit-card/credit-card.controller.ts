@@ -13,12 +13,20 @@ export async function createCreditCardController(
   res: Response
 ) {
   try {
+      if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const validatedData =
       createCreditCardSchema.parse(req.body);
 
     const result =
       await createCreditCardService(
-        validatedData
+        validatedData,
+        req.user.id
       );
 
     return res.status(201).json({

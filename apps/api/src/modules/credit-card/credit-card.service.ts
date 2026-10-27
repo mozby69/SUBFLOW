@@ -5,9 +5,11 @@ import type {
 import { addCreditCardRepo, getCreditCardsRepo } from "./credit-card.repository";
 
 export async function createCreditCardService(
-  params: CreateCreditCardInput
+  params: CreateCreditCardInput,
+  userId: number
 ) {
   return addCreditCardRepo({
+    userId,
     bank: params.bank,
     last_four_digit: params.last_four_digit,
     network: params.network,

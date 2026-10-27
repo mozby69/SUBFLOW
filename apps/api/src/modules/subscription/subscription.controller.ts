@@ -10,12 +10,21 @@ export async function createSubscriptionController(
   res: Response
 ) {
   try {
+
+   if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const validated =
       createSubscriptionSchema.parse(req.body);
 
     const result =
       await subscriptionServiceList.createSubscription(
-        validated
+        validated,
+         req.user.id
       );
 
     return res.status(201).json({

@@ -9,6 +9,12 @@ export async function seedRoles() {
                 "ADMIN_MANAGE",
             ],
         },
+         {
+            name: "USER",
+            permissions: [
+                "USER_MANAGE",
+            ],
+        },
     ];
 
     for (const role of roles) {

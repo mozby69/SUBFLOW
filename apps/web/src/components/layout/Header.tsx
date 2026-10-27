@@ -2,9 +2,15 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Bell, Menu } from "lucide-react";
+import {
+  Bell,
+  Menu,
+} from "lucide-react";
+
 import { navigation } from "@/config/navigation.config";
 import { useSidebar } from "./Sidebar-Context";
+
+import NotificationBell from "@/modules/user/notifications/components/NotificationBell";
 
 export default function Header() {
   const pathname = usePathname();
@@ -18,10 +24,14 @@ export default function Header() {
 
   const pageTitle = currentPage?.title ?? "Overview";
 
-  const { collapsed, toggleSidebar, toggleMobile } = useSidebar();
+  const {
+    collapsed,
+    toggleSidebar,
+    toggleMobile,
+  } = useSidebar();
 
   return (
-    <header className="flex h-20.5 shrink-0 items-center justify-between border-b border-[#E1E5ED] bg-[#F8FAFD] px-8">
+  <header className="flex h-20.5 shrink-0 items-center justify-between border-b border-[#E1E5ED] bg-[#F8FAFD] px-8">
       <button
         type="button"
         onClick={() => {

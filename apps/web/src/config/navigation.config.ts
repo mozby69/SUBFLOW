@@ -8,6 +8,8 @@ import {
     Library,
     RefreshCcw,
     CreditCard,
+    ReceiptText,
+    Bell,
     Calendar1
 } from "lucide-react";
 
@@ -45,10 +47,23 @@ export const navigation: NavigationItem[] = [
         icon: CreditCard,
         roles: ["USER"],
     },
+      {
+        title: "Billing",
+        href: ROUTES.USER.BILLING, // temporary
+        icon: ReceiptText,
+        roles: ["USER"],
+    },
      {
         title: "Calendar",
         href: ROUTES.USER.CALENDAR, // temporary
         icon: Calendar1,
+        roles: ["USER"],
+    },
+
+      {
+        title: "Notifications",
+        href: ROUTES.USER.NOTIFICATIONS, // temporary
+        icon: Bell,
         roles: ["USER"],
     },
    
