@@ -3,7 +3,6 @@
 
 import { usePathname } from "next/navigation";
 import {
-  Bell,
   Menu,
 } from "lucide-react";
 
@@ -31,7 +30,8 @@ export default function Header() {
   } = useSidebar();
 
   return (
-  <header className="flex h-20.5 shrink-0 items-center justify-between border-b border-[#E1E5ED] bg-[#F8FAFD] px-8">
+   <header className="flex h-20.5 shrink-0 items-center justify-between border-b border-[#E1E5ED] bg-[#F8FAFD] px-8">
+      {/* SIDEBAR TOGGLE */}
       <button
         type="button"
         onClick={() => {
@@ -43,15 +43,12 @@ export default function Header() {
         }}
         aria-label="Toggle sidebar"
         aria-expanded={!collapsed}
-        className="
-          flex h-9 w-9 shrink-0 items-center justify-center
-          rounded-lg text-[#344054]
-          transition-colors hover:bg-[#E9EDF5]
-        "
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#26342F] transition-colors hover:bg-[#E2E5DF]"
       >
         <Menu size={20} strokeWidth={1.8} />
       </button>
 
+      {/* PAGE TITLE */}
       <div className="flex flex-col gap-0.5">
         <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#667085]">
           User Workspace
@@ -62,23 +59,9 @@ export default function Header() {
         </h1>
       </div>
 
-      {/* Right */}
+      {/* RIGHT ACTIONS */}
       <div className="flex items-center gap-2">
-        <button
-          type="button"
-          aria-label="Notifications"
-          className="relative flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#E1E5ED] bg-transparent text-[#475467] transition-colors hover:bg-[#EEF1F8]"
-        >
-          <Bell size={17} strokeWidth={1.7} />
-        </button>
-
-        {/* <button
-          type="button"
-          className="flex h-9 items-center gap-2 rounded-[10px] bg-[#171B4B] px-4 text-[12px] font-medium text-white transition-colors hover:bg-[#303C87]"
-        >
-          <Plus size={15} strokeWidth={1.8} />
-          New Record
-        </button> */}
+        <NotificationBell />
       </div>
     </header>
   );

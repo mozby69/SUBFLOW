@@ -100,10 +100,10 @@ export default function Sidebar() {
             `}
           >
             <h2 className="text-[16px] font-semibold leading-tight text-[#171B35]">
-              SUBFLOW
+              SMS
             </h2>
             <p className="mt-0.5 whitespace-nowrap text-[10px] text-[#667085]">
-              User workspace
+              Subscription Monitoring
             </p>
           </div>
 
