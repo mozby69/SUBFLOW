@@ -8,20 +8,19 @@ import type {
 const SOCKET_URL =
     process.env.NEXT_PUBLIC_BACKEND_LAN_URL;
 
-let socket: Socket<
+type AppSocket = Socket<
     ServerToClientEvents,
     ClientToServerEvents
-> | null = null;
+>;
 
-export const createSocket = () => {
+let socket: AppSocket | null = null;
+
+export const createSocket = (): AppSocket => {
     if (!socket) {
-        socket = io<
-            ServerToClientEvents,
-            ClientToServerEvents
-        >(SOCKET_URL!, {
+        socket = io(SOCKET_URL!, {
             autoConnect: true,
             withCredentials: true,
-        });
+        }) as AppSocket;
     }
 
     return socket;

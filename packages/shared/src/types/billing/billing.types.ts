@@ -1,4 +1,5 @@
 import { BillingQueryInput } from "../../schemas";
+import { BillingCycle } from "../user/subscription";
 
 export type BillingStatus =
   | "SCHEDULED"
@@ -7,7 +8,6 @@ export type BillingStatus =
   | "OVERDUE"
   | "CANCELLED";
 
-export type BillingCycle = "MONTHLY" | "YEARLY";
 
 export interface BillingCreditCard {
   id: number;

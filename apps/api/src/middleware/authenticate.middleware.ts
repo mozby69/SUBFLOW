@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyToken } from "@/modules/auth/internal/token.service";
+import { verifyToken } from "../modules/auth/internal/token.service";
 import { authConfig } from "@/config/auth.config";
 import { getAuthenticatedUser } from "@/modules/auth/auth.service";
 

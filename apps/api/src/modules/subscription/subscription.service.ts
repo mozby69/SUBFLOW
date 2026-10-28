@@ -1,6 +1,6 @@
 import { AddSubscriptionValues, CreateSubscriptionInput, CreditCard2, CreditCardSchema, UpdateSubscriptionSchema } from '@repo/shared';
 import * as subscriptionRepositoryList from './subscription.repository';
-import { QueryParams } from '../../../../../packages/shared/src/types/query.types';
+import type { QueryParams } from "@repo/shared";
 
 
 export async function createSubscription(

@@ -1,4 +1,4 @@
-import { QueryParams } from "../query.types";
+import type { QueryParams } from "../query.types";
 
 export type Permission = {
     id: number;
