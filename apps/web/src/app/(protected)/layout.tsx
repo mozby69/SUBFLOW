@@ -11,6 +11,10 @@ import {
   useSidebar,
 } from "@/components/layout/Sidebar-Context";
 
+// ==========================================
+// PROTECTED LAYOUT CONTENT
+// ==========================================
+
 function ProtectedLayoutContent({
   children,
 }: {
@@ -19,16 +23,31 @@ function ProtectedLayoutContent({
   const { collapsed } = useSidebar();
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-[#F8F9FB]">
-      {/* Fixed Sidebar */}
+    <div
+      className="
+        flex h-dvh w-full
+        overflow-hidden
+        bg-[#F8FAFC]
+        text-[#0F172A]
+      "
+    >
+      {/* ====================================
+          FIXED SIDEBAR
+      ==================================== */}
+
       <Sidebar />
 
-      {/* Main workspace */}
+      {/* ====================================
+          MAIN WORKSPACE
+      ==================================== */}
+
       <div
         className={`
           flex h-full min-w-0 flex-1 flex-col
-          transition-[margin] duration-300 ease-in-out
           ml-0
+          transition-[margin-left]
+          duration-300 ease-in-out
+
           ${
             collapsed
               ? "lg:ml-[72px]"
@@ -36,12 +55,37 @@ function ProtectedLayoutContent({
           }
         `}
       >
-        {/* Fixed within workspace */}
+        {/* ==================================
+            FIXED HEADER
+        ================================== */}
+
         <Header />
 
-        {/* Only this section scrolls */}
-        <main className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
-          <div className="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        {/* ==================================
+            SCROLLABLE CONTENT
+        ================================== */}
+
+        <main
+          id="main-content"
+          className="
+            relative
+            min-h-0 flex-1
+            overflow-x-hidden
+            overflow-y-auto
+            overscroll-y-contain
+            bg-[#F8FAFC]
+            scroll-smooth
+          "
+        >
+          <div
+            className="
+              mx-auto
+              w-full max-w-[1600px]
+              px-4 py-6
+              sm:px-6
+              lg:px-8 lg:py-8
+            "
+          >
             {children}
           </div>
         </main>
@@ -49,6 +93,10 @@ function ProtectedLayoutContent({
     </div>
   );
 }
+
+// ==========================================
+// PROTECTED LAYOUT
+// ==========================================
 
 export default function ProtectedLayout({
   children,

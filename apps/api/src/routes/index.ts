@@ -7,6 +7,8 @@ import bilingRoutes from "@/modules/billing/billing.routes";
 import creditCardRoutes from "@/modules/credit-card/credit-card.route";
 import notificationRoutes from "@/modules/notifications/notifcation.route";
 import calendarRoutes from "@/modules/calendar/calendar.route";
+import userDashboardRoutes from "@/modules/dashboard/dashboard.routes";
+
 import { authenticate } from '@/middleware/authenticate.middleware';
 
 const router = Router();
@@ -31,6 +33,7 @@ router.use("/billing", authenticate, bilingRoutes )
 router.use("/credit-card", authenticate, creditCardRoutes )
 router.use("/notifications", authenticate, notificationRoutes )
 router.use("/calendar",authenticate,calendarRoutes);
+router.use("/dashboard",authenticate,userDashboardRoutes);
 
 
 export default router;

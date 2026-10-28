@@ -2,10 +2,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import {
-  Bell,
-  Menu,
-} from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 import { navigation } from "@/config/navigation.config";
 import { useSidebar } from "./Sidebar-Context";
@@ -15,12 +12,18 @@ import NotificationBell from "@/modules/user/notifications/components/Notificati
 export default function Header() {
   const pathname = usePathname();
 
-  const currentPage = navigation.find(
-    (item) =>
-      pathname === item.href ||
-      (item.href !== "/" &&
-        pathname.startsWith(`${item.href}/`))
-  );
+  // ==========================================
+  // CURRENT PAGE
+  // ==========================================
+
+  const currentPage = navigation
+    .filter(
+      (item) =>
+        pathname === item.href ||
+        (item.href !== "/" &&
+          pathname.startsWith(`${item.href}/`))
+    )
+    .sort((a, b) => b.href.length - a.href.length)[0];
 
   const pageTitle = currentPage?.title ?? "Overview";
 
@@ -30,55 +33,135 @@ export default function Header() {
     toggleMobile,
   } = useSidebar();
 
+  // ==========================================
+  // SIDEBAR TOGGLE
+  // ==========================================
+
+  const handleSidebarToggle = () => {
+    if (window.innerWidth < 1024) {
+      toggleMobile();
+    } else {
+      toggleSidebar();
+    }
+  };
+
   return (
-  <header className="flex h-20.5 shrink-0 items-center justify-between border-b border-[#E1E5ED] bg-[#F8FAFD] px-8">
-      <button
-        type="button"
-        onClick={() => {
-          if (window.innerWidth < 1024) {
-            toggleMobile();
-          } else {
-            toggleSidebar();
-          }
-        }}
-        aria-label="Toggle sidebar"
-        aria-expanded={!collapsed}
+    <header
+      className="
+        relative z-30
+        flex h-20.5 shrink-0
+        items-center justify-between
+        border-b border-[#E2E8F0]
+        bg-white/95
+        px-4 sm:px-6 lg:px-8
+        shadow-[0_1px_3px_rgba(15,23,42,0.025)]
+        backdrop-blur-md
+      "
+    >
+      {/* ======================================
+          LEFT: SIDEBAR TOGGLE
+      ====================================== */}
+
+      <div className="flex items-center">
+        <button
+          type="button"
+          onClick={handleSidebarToggle}
+          aria-label="Toggle sidebar"
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="
+            group flex h-10 w-10
+            shrink-0 items-center justify-center
+            rounded-xl
+            border border-transparent
+            text-[#475569]
+            transition-all duration-200
+            hover:border-[#C7D2FE]
+            hover:bg-[#EEF2FF]
+            hover:text-[#4F46E5]
+            focus-visible:outline-2
+            focus-visible:outline-offset-2
+            focus-visible:outline-indigo-500
+          "
+        >
+          {/* MOBILE ICON */}
+
+          <Menu
+            size={20}
+            strokeWidth={1.8}
+            className="lg:hidden"
+          />
+
+          {/* DESKTOP ICON */}
+
+          {collapsed ? (
+            <PanelLeftOpen
+              size={20}
+              strokeWidth={1.8}
+              className="hidden lg:block"
+            />
+          ) : (
+            <PanelLeftClose
+              size={20}
+              strokeWidth={1.8}
+              className="hidden lg:block"
+            />
+          )}
+        </button>
+      </div>
+
+      {/* ======================================
+          CENTER: PAGE TITLE
+      ====================================== */}
+
+      <div
         className="
-          flex h-9 w-9 shrink-0 items-center justify-center
-          rounded-lg text-[#344054]
-          transition-colors hover:bg-[#E9EDF5]
+          absolute left-1/2
+          flex max-w-[45%]
+          -translate-x-1/2
+          flex-col items-start
+          gap-0.5
         "
       >
-        <Menu size={20} strokeWidth={1.8} />
-      </button>
-
-      <div className="flex flex-col gap-0.5">
-        <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#667085]">
+        <p
+          className="
+            whitespace-nowrap
+            text-[10px] font-semibold
+            uppercase tracking-[0.16em]
+            text-[#94A3B8]
+          "
+        >
           User Workspace
         </p>
 
-        <h1 className="text-[17px] font-semibold leading-tight tracking-tight text-[#101828]">
+        <h1
+          className="
+            max-w-full truncate
+            text-[17px] font-semibold
+            leading-tight tracking-tight
+            text-[#0F172A]
+          "
+          title={pageTitle}
+        >
           {pageTitle}
         </h1>
       </div>
 
-      {/* Right */}
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          aria-label="Notifications"
-          className="relative flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#E1E5ED] bg-transparent text-[#475467] transition-colors hover:bg-[#EEF1F8]"
-        >
-          <Bell size={17} strokeWidth={1.7} />
-        </button>
+      {/* ======================================
+          RIGHT: NOTIFICATIONS
+      ====================================== */}
 
-        {/* <button
-          type="button"
-          className="flex h-9 items-center gap-2 rounded-[10px] bg-[#171B4B] px-4 text-[12px] font-medium text-white transition-colors hover:bg-[#303C87]"
+      <div className="flex items-center gap-3">
+        <div
+          className="
+            flex h-10 min-w-10
+            items-center justify-center
+            rounded-xl
+            transition-colors duration-200
+            hover:bg-[#EEF2FF]
+          "
         >
-          <Plus size={15} strokeWidth={1.8} />
-          New Record
-        </button> */}
+          <NotificationBell />
+        </div>
       </div>
     </header>
   );

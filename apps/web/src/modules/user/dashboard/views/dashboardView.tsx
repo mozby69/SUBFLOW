@@ -3,20 +3,17 @@
 
 import { useMemo, useState } from "react";
 import {
-  Activity,
-  ArrowDownRight,
-  ArrowRight,
   ArrowUpRight,
   CalendarClock,
   CheckCircle2,
-  ChevronDown,
   CircleAlert,
   CreditCard,
-  DollarSign,
   ReceiptText,
-  Repeat2,
   Wallet,
+  Loader2,
+  LayoutDashboard,
 } from "lucide-react";
+
 import {
   ResponsiveContainer,
   CartesianGrid,
@@ -31,7 +28,13 @@ import {
   Cell,
 } from "recharts";
 
-// Replace these demo records with your API response.
+import type { DashboardPeriod } from "../services/dashboard.service";
+import { useDashboard } from "../hooks/useDashboard";
+
+// ==========================================
+// TYPES
+// ==========================================
+
 type BillingStatus =
   | "SCHEDULED"
   | "PARTIALLY_PAID"
@@ -57,95 +60,23 @@ type CardInfo = {
   lastFour: string;
   creditLimit: number;
   outstanding: number;
+  status?: string;
 };
 
-const demoBillings: Billing[] = [
-  {
-    id: 1,
-    name: "Netflix Premium",
-    category: "Entertainment",
-    dueDate: "2026-10-20",
-    amount: 1500,
-    paidAmount: 0,
-    status: "SCHEDULED",
-    card: "Visa •••• 4242",
-  },
-  {
-    id: 2,
-    name: "Spotify Premium",
-    category: "Entertainment",
-    dueDate: "2026-10-22",
-    amount: 499,
-    paidAmount: 0,
-    status: "SCHEDULED",
-    card: "Mastercard •••• 1234",
-  },
-  {
-    id: 3,
-    name: "Adobe Creative Cloud",
-    category: "Software",
-    dueDate: "2026-10-15",
-    amount: 2500,
-    paidAmount: 0,
-    status: "OVERDUE",
-    card: "Visa •••• 4242",
-  },
-  {
-    id: 4,
-    name: "YouTube Premium",
-    category: "Entertainment",
-    dueDate: "2026-10-25",
-    amount: 239,
-    paidAmount: 239,
-    status: "PAID",
-    card: "Visa •••• 4242",
-  },
-  {
-    id: 5,
-    name: "iCloud+",
-    category: "Cloud Storage",
-    dueDate: "2026-10-18",
-    amount: 149,
-    paidAmount: 50,
-    status: "PARTIALLY_PAID",
-    card: "Mastercard •••• 1234",
-  },
-];
+type MonthlyData = {
+  month: string;
+  billed: number;
+  paid: number;
+};
 
-const demoCards: CardInfo[] = [
-  {
-    id: 1,
-    bank: "BPI",
-    network: "VISA",
-    lastFour: "4242",
-    creditLimit: 100000,
-    outstanding: 18500,
-  },
-  {
-    id: 2,
-    bank: "BDO",
-    network: "MASTERCARD",
-    lastFour: "1234",
-    creditLimit: 50000,
-    outstanding: 8750,
-  },
-];
+type CategoryData = {
+  name: string;
+  value: number;
+};
 
-const monthlyData = [
-  { month: "May", billed: 6500, paid: 6100 },
-  { month: "Jun", billed: 6800, paid: 6600 },
-  { month: "Jul", billed: 7200, paid: 7100 },
-  { month: "Aug", billed: 6900, paid: 6900 },
-  { month: "Sep", billed: 7900, paid: 7200 },
-  { month: "Oct", billed: 8249, paid: 4800 },
-];
-
-const categoryData = [
-  { name: "Entertainment", value: 4200 },
-  { name: "Software", value: 2500 },
-  { name: "Cloud Storage", value: 849 },
-  { name: "Others", value: 700 },
-];
+// ==========================================
+// CONSTANTS
+// ==========================================
 
 const CHART_COLORS = [
   "#6366f1",
@@ -153,6 +84,10 @@ const CHART_COLORS = [
   "#f59e0b",
   "#94a3b8",
 ];
+
+// ==========================================
+// FORMATTERS
+// ==========================================
 
 const peso = (amount: number) =>
   new Intl.NumberFormat("en-PH", {
@@ -179,7 +114,15 @@ function formatDate(date: string) {
   );
 }
 
-function StatusBadge({ status }: { status: BillingStatus }) {
+// ==========================================
+// STATUS BADGE
+// ==========================================
+
+function StatusBadge({
+  status,
+}: {
+  status: BillingStatus;
+}) {
   const styles: Record<BillingStatus, string> = {
     PAID: "bg-emerald-50 text-emerald-700",
     SCHEDULED: "bg-blue-50 text-blue-700",
@@ -196,6 +139,10 @@ function StatusBadge({ status }: { status: BillingStatus }) {
     </span>
   );
 }
+
+// ==========================================
+// SUMMARY CARD
+// ==========================================
 
 function SummaryCard({
   title,
@@ -216,6 +163,7 @@ function SummaryCard({
         <p className="text-sm font-medium text-slate-500">
           {title}
         </p>
+
         <div className={`rounded-xl p-2.5 ${iconClass}`}>
           <Icon className="h-5 w-5" />
         </div>
@@ -224,6 +172,7 @@ function SummaryCard({
       <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-900">
         {value}
       </h3>
+
       <p className="mt-2 text-xs text-slate-500">
         {description}
       </p>
@@ -231,86 +180,200 @@ function SummaryCard({
   );
 }
 
+// ==========================================
+// MAIN DASHBOARD
+// ==========================================
+
 export default function DashboardSubscriptionView() {
-  const [billingFilter, setBillingFilter] = useState<
-    "ALL" | BillingStatus
-  >("ALL");
+  // ========================================
+  // STATES
+  // ========================================
 
-  const billings = demoBillings;
-  const cards = demoCards;
+  const [period, setPeriod] =
+    useState<DashboardPeriod>("month");
 
-  const summary = useMemo(() => {
-    const totalBilled = billings
-      .filter((bill) => bill.status !== "CANCELLED")
-      .reduce((sum, bill) => sum + bill.amount, 0);
+  const [billingFilter, setBillingFilter] =
+    useState<"ALL" | BillingStatus>("ALL");
 
-    const totalPaid = billings
-      .filter((bill) => bill.status !== "CANCELLED")
-      .reduce((sum, bill) => sum + bill.paidAmount, 0);
+  // ========================================
+  // REACT QUERY
+  // ========================================
 
-    const outstanding = totalBilled - totalPaid;
+  const {
+    data,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useDashboard(period);
 
-    const overdue = billings
-      .filter((bill) => bill.status === "OVERDUE")
-      .reduce(
-        (sum, bill) => sum + bill.amount - bill.paidAmount,
-        0
-      );
+  // ========================================
+  // API DATA
+  // ========================================
 
-    const totalCreditLimit = cards.reduce(
-      (sum, card) => sum + card.creditLimit,
-      0
+  const billings: Billing[] =
+    data?.recentBillings ?? [];
+
+  const cards: CardInfo[] =
+    data?.cards ?? [];
+
+  const monthlyData: MonthlyData[] =
+    data?.monthlyData ?? [];
+
+  const categoryData: CategoryData[] =
+    data?.categoryData ?? [];
+
+  // ========================================
+  // SUMMARY
+  // ========================================
+
+  const summary = {
+    totalBilled:
+      data?.summary.totalBilled ?? 0,
+
+    totalPaid:
+      data?.summary.totalPaid ?? 0,
+
+    outstanding:
+      data?.summary.outstanding ?? 0,
+
+    overdue:
+      data?.summary.overdue ?? 0,
+
+    totalCreditLimit:
+      data?.creditSummary.totalCreditLimit ?? 0,
+
+    totalCardOutstanding:
+      data?.creditSummary.totalCardOutstanding ?? 0,
+
+    availableCredit:
+      data?.creditSummary.availableCredit ?? 0,
+  };
+
+  // ========================================
+  // FILTERED BILLINGS
+  // ========================================
+
+  const filteredBillings = useMemo(() => {
+    if (billingFilter === "ALL") {
+      return billings;
+    }
+
+    return billings.filter(
+      (bill) => bill.status === billingFilter
     );
+  }, [billings, billingFilter]);
 
-    const totalCardOutstanding = cards.reduce(
-      (sum, card) => sum + card.outstanding,
-      0
+  // ========================================
+  // LOADING STATE
+  // ========================================
+
+  if (isLoading && !data) {
+    return (
+      <div className="flex min-h-[500px] flex-col items-center justify-center gap-3">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+
+        <p className="text-sm text-slate-500">
+          Loading dashboard data...
+        </p>
+      </div>
     );
+  }
 
-    return {
-      totalBilled,
-      totalPaid,
-      outstanding,
-      overdue,
-      totalCreditLimit,
-      totalCardOutstanding,
-      availableCredit:
-        totalCreditLimit - totalCardOutstanding,
-    };
-  }, [billings, cards]);
+  // ========================================
+  // ERROR STATE
+  // ========================================
 
-  const filteredBillings = billings.filter(
-    (bill) =>
-      billingFilter === "ALL" ||
-      bill.status === billingFilter
-  );
+  if (isError && !data) {
+    return (
+      <div className="flex min-h-[500px] flex-col items-center justify-center gap-4">
+        <CircleAlert className="h-10 w-10 text-red-500" />
+
+        <p className="text-sm text-red-600">
+          Failed to load dashboard data.
+        </p>
+
+        <button
+          onClick={() => refetch()}
+          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  // ========================================
+  // DASHBOARD UI
+  // ========================================
 
   return (
-    <div className="min-h-screen p-4 md:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl space-y-6">
-        {/* HEADER */}
+    <div className="w-full min-w-0 space-y-6 p-2">
+      <div className="mx-auto space-y-6">
+        {/* =====================================
+            HEADER
+        ===================================== */}
+
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="flex gap-3">
+   <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#DCE2EC] bg-[#E4E9FA]">
+          <LayoutDashboard
+            size={20}
+            strokeWidth={1.7}
+        className="text-[#303C87]"
+          />
+        </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+           <h1 className="text-[22px] font-semibold tracking-tight text-[#26342F]">
               Dashboard
             </h1>
-            <p className="mt-1 text-sm text-slate-500">
+
+           <p className="mt-1 text-[13px] leading-relaxed text-[#8A958C]">
               Monitor subscriptions, billings, and credit cards.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600">
-            <CalendarClock className="h-4 w-4" />
-            <span>
-              {new Date().toLocaleDateString("en-PH", {
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
+          </div>
+         
+
+          <div className="flex flex-wrap items-center gap-3">
+
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600">
+              <CalendarClock className="h-4 w-4" />
+
+              <span>
+                {new Date().toLocaleDateString("en-PH", {
+                  month: "long",
+                  year: "numeric",
+                  timeZone: "Asia/Manila",
+                })}
+              </span>
+            </div>
+
+            <select
+              value={period}
+              onChange={(event) =>
+                setPeriod(
+                  event.target.value as DashboardPeriod
+                )
+              }
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-indigo-500"
+            >
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+              <option value="all">All Time</option>
+            </select>
+
+            {isFetching && (
+              <Loader2 className="h-4 w-4 animate-spin text-indigo-600" />
+            )}
           </div>
         </div>
 
-        {/* SUMMARY CARDS */}
+        {/* =====================================
+            SUMMARY CARDS
+        ===================================== */}
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <SummaryCard
             title="Total Billings"
@@ -319,6 +382,7 @@ export default function DashboardSubscriptionView() {
             icon={ReceiptText}
             iconClass="bg-indigo-50 text-indigo-600"
           />
+
           <SummaryCard
             title="Total Paid"
             value={peso(summary.totalPaid)}
@@ -326,6 +390,7 @@ export default function DashboardSubscriptionView() {
             icon={CheckCircle2}
             iconClass="bg-emerald-50 text-emerald-600"
           />
+
           <SummaryCard
             title="Outstanding Bills"
             value={peso(summary.outstanding)}
@@ -333,6 +398,7 @@ export default function DashboardSubscriptionView() {
             icon={Wallet}
             iconClass="bg-amber-50 text-amber-600"
           />
+
           <SummaryCard
             title="Overdue Bills"
             value={peso(summary.overdue)}
@@ -342,13 +408,20 @@ export default function DashboardSubscriptionView() {
           />
         </div>
 
-        {/* CHARTS */}
+        {/* =====================================
+            CHARTS
+        ===================================== */}
+
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+
+          {/* BILLING CHART */}
+
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm xl:col-span-2">
             <div className="mb-6">
               <h2 className="text-base font-semibold text-slate-900">
                 Billing & Payment Overview
               </h2>
+
               <p className="mt-1 text-xs text-slate-500">
                 Monthly comparison of billed and paid amounts
               </p>
@@ -356,26 +429,38 @@ export default function DashboardSubscriptionView() {
 
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthlyData} barGap={6}>
+                <BarChart
+                  data={monthlyData}
+                  barGap={6}
+                >
                   <CartesianGrid
                     strokeDasharray="3 3"
                     vertical={false}
                     stroke="#e2e8f0"
                   />
+
                   <XAxis
                     dataKey="month"
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: "#64748b", fontSize: 12 }}
                   />
+
                   <YAxis
                     axisLine={false}
                     tickLine={false}
                     tickFormatter={shortPeso}
                     tick={{ fill: "#64748b", fontSize: 12 }}
                   />
-                  <Tooltip formatter={(value) => peso(Number(value))} />
+
+                  <Tooltip
+                    formatter={(value) =>
+                      peso(Number(value))
+                    }
+                  />
+
                   <Legend />
+
                   <Bar
                     dataKey="billed"
                     name="Billed"
@@ -383,6 +468,7 @@ export default function DashboardSubscriptionView() {
                     radius={[5, 5, 0, 0]}
                     maxBarSize={32}
                   />
+
                   <Bar
                     dataKey="paid"
                     name="Paid"
@@ -396,10 +482,12 @@ export default function DashboardSubscriptionView() {
           </div>
 
           {/* CATEGORY CHART */}
+
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-base font-semibold text-slate-900">
               Spending by Category
             </h2>
+
             <p className="mt-1 text-xs text-slate-500">
               Subscription expense distribution
             </p>
@@ -418,11 +506,20 @@ export default function DashboardSubscriptionView() {
                     {categoryData.map((entry, index) => (
                       <Cell
                         key={entry.name}
-                        fill={CHART_COLORS[index % CHART_COLORS.length]}
+                        fill={
+                          CHART_COLORS[
+                            index % CHART_COLORS.length
+                          ]
+                        }
                       />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => peso(Number(value))} />
+
+                  <Tooltip
+                    formatter={(value) =>
+                      peso(Number(value))
+                    }
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -438,31 +535,45 @@ export default function DashboardSubscriptionView() {
                       className="h-2.5 w-2.5 rounded-full"
                       style={{
                         backgroundColor:
-                          CHART_COLORS[index % CHART_COLORS.length],
+                          CHART_COLORS[
+                            index % CHART_COLORS.length
+                          ],
                       }}
                     />
-                    <span className="text-slate-600">{item.name}</span>
+
+                    <span className="text-slate-600">
+                      {item.name}
+                    </span>
                   </div>
+
                   <span className="font-semibold text-slate-900">
                     {peso(item.value)}
                   </span>
                 </div>
               ))}
+
+              {categoryData.length === 0 && (
+                <p className="py-4 text-center text-sm text-slate-500">
+                  No category data available.
+                </p>
+              )}
             </div>
           </div>
         </div>
 
-        {/* CREDIT CARDS */}
+        {/* =====================================
+            CREDIT CARD OVERVIEW
+        ===================================== */}
+
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-900">
-                Credit Card Overview
-              </h2>
-              <p className="text-sm text-slate-500">
-                Credit limits and outstanding balances
-              </p>
-            </div>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">
+              Credit Card Overview
+            </h2>
+
+            <p className="text-sm text-slate-500">
+              Credit limits and outstanding balances
+            </p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -473,6 +584,7 @@ export default function DashboardSubscriptionView() {
               icon={CreditCard}
               iconClass="bg-blue-50 text-blue-600"
             />
+
             <SummaryCard
               title="Card Outstanding"
               value={peso(summary.totalCardOutstanding)}
@@ -480,6 +592,7 @@ export default function DashboardSubscriptionView() {
               icon={ArrowUpRight}
               iconClass="bg-orange-50 text-orange-600"
             />
+
             <SummaryCard
               title="Available Credit"
               value={peso(summary.availableCredit)}
@@ -488,6 +601,8 @@ export default function DashboardSubscriptionView() {
               iconClass="bg-emerald-50 text-emerald-600"
             />
           </div>
+
+          {/* CREDIT CARD LIST */}
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {cards.map((card) => {
@@ -506,10 +621,12 @@ export default function DashboardSubscriptionView() {
                       <h3 className="font-semibold text-slate-900">
                         {card.bank}
                       </h3>
+
                       <p className="mt-1 text-xs text-slate-500">
                         {card.network} •••• {card.lastFour}
                       </p>
                     </div>
+
                     <CreditCard className="h-5 w-5 text-slate-400" />
                   </div>
 
@@ -517,6 +634,7 @@ export default function DashboardSubscriptionView() {
                     <span className="text-slate-500">
                       Credit Utilization
                     </span>
+
                     <span className="font-semibold text-slate-900">
                       {utilization.toFixed(1)}%
                     </span>
@@ -542,13 +660,20 @@ export default function DashboardSubscriptionView() {
 
                   <div className="mt-4 flex justify-between text-xs">
                     <div>
-                      <p className="text-slate-500">Outstanding</p>
+                      <p className="text-slate-500">
+                        Outstanding
+                      </p>
+
                       <p className="mt-1 font-semibold text-slate-900">
                         {peso(card.outstanding)}
                       </p>
                     </div>
+
                     <div className="text-right">
-                      <p className="text-slate-500">Credit Limit</p>
+                      <p className="text-slate-500">
+                        Credit Limit
+                      </p>
+
                       <p className="mt-1 font-semibold text-slate-900">
                         {peso(card.creditLimit)}
                       </p>
@@ -557,16 +682,29 @@ export default function DashboardSubscriptionView() {
                 </div>
               );
             })}
+
+            {cards.length === 0 && (
+              <div className="col-span-full rounded-2xl border border-slate-200 bg-white p-10 text-center text-sm text-slate-500">
+                No credit cards registered.
+              </div>
+            )}
           </div>
         </div>
 
-        {/* BILLING TABLE */}
+        {/* =====================================
+            RECENT SUBSCRIPTION BILLINGS
+        ===================================== */}
+
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+          {/* TABLE HEADER */}
+
           <div className="flex flex-col gap-3 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-base font-semibold text-slate-900">
                 Recent Subscription Billings
               </h2>
+
               <p className="mt-1 text-xs text-slate-500">
                 Monitor billing status and payments
               </p>
@@ -584,24 +722,46 @@ export default function DashboardSubscriptionView() {
               <option value="ALL">All Status</option>
               <option value="SCHEDULED">Scheduled</option>
               <option value="PAID">Paid</option>
-              <option value="PARTIALLY_PAID">Partially Paid</option>
+              <option value="PARTIALLY_PAID">
+                Partially Paid
+              </option>
               <option value="OVERDUE">Overdue</option>
               <option value="CANCELLED">Cancelled</option>
             </select>
           </div>
 
+          {/* TABLE CONTENT */}
+
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                 <tr>
-                  <th className="px-5 py-4">Subscription</th>
-                  <th className="px-5 py-4">Due Date</th>
-                  <th className="px-5 py-4">Amount</th>
-                  <th className="px-5 py-4">Paid</th>
-                  <th className="px-5 py-4">Outstanding</th>
-                  <th className="px-5 py-4">Status</th>
+                  <th className="px-5 py-4">
+                    Subscription
+                  </th>
+
+                  <th className="px-5 py-4">
+                    Due Date
+                  </th>
+
+                  <th className="px-5 py-4">
+                    Amount
+                  </th>
+
+                  <th className="px-5 py-4">
+                    Paid
+                  </th>
+
+                  <th className="px-5 py-4">
+                    Outstanding
+                  </th>
+
+                  <th className="px-5 py-4">
+                    Status
+                  </th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-slate-100">
                 {filteredBillings.map((bill) => (
                   <tr
@@ -612,22 +772,33 @@ export default function DashboardSubscriptionView() {
                       <p className="font-medium text-slate-900">
                         {bill.name}
                       </p>
+
                       <p className="mt-1 text-xs text-slate-500">
                         {bill.card}
                       </p>
                     </td>
+
                     <td className="px-5 py-4 text-slate-600">
                       {formatDate(bill.dueDate)}
                     </td>
+
                     <td className="px-5 py-4 font-medium">
                       {peso(bill.amount)}
                     </td>
+
                     <td className="px-5 py-4 text-emerald-600">
                       {peso(bill.paidAmount)}
                     </td>
+
                     <td className="px-5 py-4 font-medium text-slate-700">
-                      {peso(Math.max(0, bill.amount - bill.paidAmount))}
+                      {peso(
+                        Math.max(
+                          0,
+                          bill.amount - bill.paidAmount
+                        )
+                      )}
                     </td>
+
                     <td className="px-5 py-4">
                       <StatusBadge status={bill.status} />
                     </td>
