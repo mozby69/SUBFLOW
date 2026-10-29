@@ -21,6 +21,9 @@ const adapter = new PrismaMariaDb({
     connectionLimit: 10,
     connectTimeout: 10000,
     acquireTimeout: 30000,
+
+    // Required for your current MySQL 8.4 authentication setup
+    allowPublicKeyRetrieval: true,
 });
 
 export const prisma = new PrismaClient({

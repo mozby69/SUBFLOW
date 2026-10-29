@@ -33,6 +33,6 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 
-EXPOSE 5000
+EXPOSE 5001
 
 CMD ["pnpm", "--filter", "api", "start"]
