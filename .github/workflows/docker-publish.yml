@@ -60,9 +60,10 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
+          file: ./Dockerfile.web
           push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          cache-from: type=gha,scope=${{ matrix.image }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+          tags: |
+            ghcr.io/mozby69/subflow-web:latest
+          build-args: |
+            NEXT_PUBLIC_BACKEND_LAN_URL=http://192.168.1.219:5001
+            NEXT_PUBLIC_BACKEND_APP_URL=http://192.168.1.219:5001
