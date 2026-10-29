@@ -13,18 +13,23 @@ COPY packages/shared/package.json packages/shared/package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
     pnpm install --frozen-lockfile --filter web...
 
+    
 FROM dependencies AS builder
+
 COPY apps/web apps/web
 COPY packages/shared packages/shared
 
-# NEXT_PUBLIC_* variables are embedded into the browser bundle at build time.
-ARG NEXT_PUBLIC_BACKEND_LAN_URL=http://localhost:5001
-ARG NEXT_PUBLIC_API_URL=http://localhost:5001/api
-ARG NEXT_PUBLIC_SOCKET_URL=http://localhost:5001
-ENV NEXT_PUBLIC_BACKEND_LAN_URL=$NEXT_PUBLIC_BACKEND_LAN_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_SOCKET_URL=$NEXT_PUBLIC_SOCKET_URL
+# Compile shared Zod schemas and TypeScript types
+RUN pnpm --filter @repo/shared build
 
+# Configure browser API URLs before Next.js build
+ARG NEXT_PUBLIC_BACKEND_LAN_URL
+ARG NEXT_PUBLIC_BACKEND_APP_URL
+
+ENV NEXT_PUBLIC_BACKEND_LAN_URL=$NEXT_PUBLIC_BACKEND_LAN_URL
+ENV NEXT_PUBLIC_BACKEND_APP_URL=$NEXT_PUBLIC_BACKEND_APP_URL
+
+# Build frontend
 RUN pnpm --filter web build
 
 FROM node:24-bookworm-slim AS runner
