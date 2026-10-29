@@ -60,10 +60,10 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile.web
+          file: ./${{ matrix.dockerfile }}
           push: true
           tags: |
-            ghcr.io/mozby69/subflow-web:latest
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:latest
           build-args: |
             NEXT_PUBLIC_BACKEND_LAN_URL=http://192.168.1.219:5001
             NEXT_PUBLIC_BACKEND_APP_URL=http://192.168.1.219:5001
