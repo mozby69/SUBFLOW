@@ -18,12 +18,17 @@ FROM dependencies AS builder
 COPY apps/api apps/api
 COPY packages/shared packages/shared
 
-# Generate does not connect to this database.
-RUN DATABASE_URL="postgresql://unused:unused@localhost:5432/unused" \
+# Build shared package first
+RUN pnpm --filter @repo/shared build
+
+# Generate Prisma Client
+RUN DATABASE_URL="mysql://unused:unused@localhost:5432/unused" \
     pnpm --filter api generate
 
+# Build API
 RUN pnpm --filter api build
 
+# Deploy production dependencies
 RUN pnpm deploy --legacy --filter api --prod /prod/api
 
 FROM node:24-bookworm-slim AS runner
