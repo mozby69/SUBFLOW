@@ -69,13 +69,14 @@ export async function getSubscriptionService(params: QueryParams) {
 
     status: sub.status,
 
+    currencyCode: sub.currencyCode,
 
     creditCardId: sub.creditCardId,
 
     startDate: sub.startDate,
     endDate: sub.endDate,
     anchorDay: Number(sub.anchorDay ?? 0),
-
+    autoRenew: sub.autoRenew,
 
     card: {
       id: sub.card.id,

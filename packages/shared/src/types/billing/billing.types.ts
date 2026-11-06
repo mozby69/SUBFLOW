@@ -59,6 +59,7 @@ export interface BillingPagination {
 export interface BillingListResult {
   data: Billing[];
   pagination: BillingPagination;
+  summary: BillingSummary;
 }
 
 
@@ -85,4 +86,19 @@ export interface BillingApiResponse {
     total: number;
     totalPages: number;
   };
+  summary: BillingSummary;
+}
+
+
+
+export interface BillingCurrencySummary {
+  currencyCode: string;
+  paid: string;
+  outstanding: string;
+  overdue: string;
+}
+
+export interface BillingSummary {
+  totalRecords: number;
+  currencies: BillingCurrencySummary[];
 }

@@ -8,6 +8,7 @@ export type BillingCycle =
   | "MONTHLY"
   | "YEARLY";
 
+
 export interface Subscription {
   id: number;
   subscriptionName: string;
@@ -15,13 +16,23 @@ export interface Subscription {
   billingCycle: BillingCycle;
   nextBilling: string | null;
   status: SubscriptionStatus;
-  paymentCard?: string;
-  category: string;
-  startDate:string;
-  endDate:string;
-  anchorDay:number;
 
+  paymentCard?: string;
+
+  category: string | null;
+  categoryId: number | null;
+
+  description: string | null;
+
+  startDate: string | null;
+  endDate: string | null;
+
+  anchorDay: number;
+  currencyCode: string;
   creditCardId: number;
+
+  autoRenew: boolean;
+  website: string | null;
 
   card: {
     id: number;
@@ -31,6 +42,7 @@ export interface Subscription {
     nickname: string | null;
   };
 }
+
 
 
 export interface SubscriptionPagination {

@@ -57,15 +57,28 @@ async function createReminder(
   userId: number,
   kind: ReminderKind,
   daysUntilDue: number
-) {
+): Promise<boolean> {
   const notificationType: NotificationType =
     kind === "UPCOMING"
       ? "BILLING_REMINDER"
       : "PAYMENT_DUE";
 
-  const key =
-    `billing:${billing.id}:` +
-    `${kind.toLowerCase()}`;
+  const key = `billing:${billing.id}:${kind.toLowerCase()}`;
+
+  // Check if notification already exists
+  const existingNotification =
+    await prisma.notification.findUnique({
+      where: {
+        deduplicationKey: key,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+  if (existingNotification) {
+    return false;
+  }
 
   const amount = billing.amount
     .minus(billing.paidAmount)
@@ -103,7 +116,7 @@ async function createReminder(
 
     return true;
   } catch (error) {
-    // Another scheduler instance already created it.
+    // Protect against concurrent scheduler executions
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
@@ -114,7 +127,6 @@ async function createReminder(
     throw error;
   }
 }
-
 export async function generateBillingReminders(
   resolveOwner: BillingOwnerResolver
 ) {

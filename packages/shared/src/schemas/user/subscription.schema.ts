@@ -26,10 +26,67 @@ export const addSubscriptionSchema = z.object({
 });
 
 
-// Update uses the same editable fields
-export const updateSubscriptionSchema = addSubscriptionSchema;
 
-export type UpdateSubscriptionSchema = z.infer<typeof updateSubscriptionSchema>
+export const updateSubscriptionSchema = z.object({
+  subscriptionName: z
+    .string()
+    .trim()
+    .min(2, "Enter a subscription name"),
+
+  amount: z.coerce
+    .number()
+    .positive("Amount must be greater than zero")
+    .finite("Enter a valid amount"),
+
+  currencyCode: z
+    .string()
+    .trim()
+    .length(3, "Currency must have 3 characters")
+    .transform((value) => value.toUpperCase()),
+
+  billingCycle: z.enum(["MONTHLY", "YEARLY"]),
+
+  nextBilling: z.string().date("Enter a valid billing date"),
+
+  status: z.enum([
+    "ACTIVE",
+    "PAUSED",
+    "TRIAL",
+    "CANCELLED",
+  ]),
+
+  category: z.string().trim().default(""),
+
+  creditCardId: z.coerce
+    .number()
+    .int()
+    .positive("Select a credit card"),
+
+  description: z.string().trim().nullable().optional(),
+
+  startDate: z.string().date().nullable().optional(),
+
+  endDate: z.string().date().nullable().optional(),
+
+  anchorDay: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(31)
+    .optional(),
+
+  autoRenew: z.boolean(),
+   website: z
+      .string()
+      .url()
+      .max(255)
+      .optional()
+      .nullable(),
+  });
+
+export type UpdateSubscriptionSchema =
+  z.output<typeof updateSubscriptionSchema>;
+
 export type AddSubscriptionInput = z.input<typeof addSubscriptionSchema>;
 export type AddSubscriptionValues = z.infer<typeof addSubscriptionSchema>
 

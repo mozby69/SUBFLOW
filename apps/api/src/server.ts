@@ -5,6 +5,7 @@ import { initializeSocket } from "./config/socket.config";
 import { logger } from "@/lib/logger/logger";
 import { generateBillingReminders, startNotificationScheduler } from "./modules/notifications/notifcation.scheduler";
 import { resolveSubscriptionOwner } from "./modules/notifications/notification.owner";
+import { runBillingGeneration, startBillingJob } from "./modules/billing/billing.job";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ server.listen(PORT, "0.0.0.0", () => {
     startNotificationScheduler(resolveSubscriptionOwner);
 
     logger.info("Notification scheduler initialized");
+    void runBillingGeneration();
 
     // TEMPORARY: Test immediately
   void generateBillingReminders(resolveSubscriptionOwner)
@@ -47,5 +49,11 @@ server.listen(PORT, "0.0.0.0", () => {
         "Notification scheduler test failed"
       );
     });
+  }
+
+    if (process.env.RUN_BILLING_SCHEDULER === "true") {
+    startBillingJob();
+
+    logger.info("Billing scheduler initialized");
   }
 });

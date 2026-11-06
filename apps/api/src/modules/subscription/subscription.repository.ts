@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/database/prisma";
-import type { QueryParams } from "@repo/shared";
+import type { QueryParams, UpdateSubscriptionSchema } from "@repo/shared";
 import { Prisma } from "../../../generated/prisma/client";
-import {  CreateSubscriptionInput, CreditCard2, SubscriptionCateogory, UpdateSubscriptionSchema } from "@repo/shared";
+import {  CreateSubscriptionInput, CreditCard2, SubscriptionCateogory,  } from "@repo/shared";
 import { calculateNextBillingDate } from "../billing/billing.utils";
 
 
@@ -152,8 +152,10 @@ export async function displaySubscription(params: QueryParams) {
         startDate:true,
         endDate:true,
         anchorDay:true,
+        currencyCode: true,
         // Foreign key
         creditCardId: true,
+        autoRenew: true,
 
         // Related credit card information
         card: {
@@ -194,7 +196,6 @@ export async function displaySubscription(params: QueryParams) {
 
 
 
-
 export async function editSubscription(
   id: number,
   data: UpdateSubscriptionSchema
@@ -206,20 +207,35 @@ export async function editSubscription(
     data: {
       subscriptionName: data.subscriptionName,
       amount: data.amount,
+      currencyCode: data.currencyCode,
       billingCycle: data.billingCycle,
-      nextBilling: new Date(`${data.nextBilling}T00:00:00.000Z`),
+
+      nextBilling: new Date(
+        `${data.nextBilling}T00:00:00.000Z`
+      ),
+
       category: data.category,
       status: data.status,
-      startDate: new Date(`${data.startDate}T00:00:00.000Z`),
-      endDate: new Date(`${data.endDate}T00:00:00.000Z`),
+
+      description: data.description,
+      website: data.website,
+      autoRenew: data.autoRenew,
+
+      startDate: data.startDate
+        ? new Date(`${data.startDate}T00:00:00.000Z`)
+        : null,
+
+      endDate: data.endDate
+        ? new Date(`${data.endDate}T00:00:00.000Z`)
+        : null,
+
       anchorDay: data.anchorDay,
-      // Update the credit card foreign key
+
       card: {
         connect: {
           id: data.creditCardId,
         },
       },
-
     },
     include: {
       card: true,

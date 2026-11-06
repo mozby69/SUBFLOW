@@ -121,10 +121,9 @@ export default function BillingView() {
         {/* BILLING DATA */}
         {data && !isError && (
           <>
-            <BillingSummaryCards
-              billings={data.data}
-              totalRecords={data.pagination.total}
-            />
+          <BillingSummaryCards
+          summary={data.summary}
+        />
 
             <BillingTable
               billings={data.data}

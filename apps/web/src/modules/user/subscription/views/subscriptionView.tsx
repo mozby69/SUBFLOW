@@ -161,12 +161,12 @@ const creditCards = creditCardResponse?.data ?? [];
             </span>
           ),
         },
-        {
+      {
           key: "amount",
           header: "Amount",
           render: (row) => (
             <span className="font-medium text-[#26342F]">
-              {formatCurrency(row.amount)}
+              {formatCurrency(row.amount, row.currencyCode ?? "PHP")}
             </span>
           ),
         },

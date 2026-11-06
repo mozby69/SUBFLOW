@@ -1,14 +1,14 @@
-export function formatCurrency(
-    amount: number,
-    locale = "en-PH",
-    currency = "PHP"
-) {
-    return new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency,
-    }).format(amount);
-}
-
+export const formatCurrency = (
+  amount: number | string,
+  currencyCode: string = "PHP"
+): string => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: currencyCode,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(Number(amount));
+};
 
 // const currencyFormatter = new Intl.NumberFormat(
 //   "en-PH",

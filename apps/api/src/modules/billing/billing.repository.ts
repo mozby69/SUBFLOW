@@ -3,8 +3,10 @@ import { Prisma } from "../../../generated/prisma/client";
 import { prisma } from "@/lib/database/prisma";
 import { BillingError } from "./billing.service";
 
+
 /**
- * Get paginated subscription billings with filters.
+ * Get paginated subscription billings
+ * with multi-currency summary.
  */
 export async function findBillings(query: BillingQueryInput) {
   const {
@@ -26,7 +28,6 @@ export async function findBillings(query: BillingQueryInput) {
     )
   );
 
-  // Build date filters without overwriting existing conditions.
   const dueDateFilter: Prisma.DateTimeFilter = {};
 
   if (fromDate) {
@@ -34,12 +35,18 @@ export async function findBillings(query: BillingQueryInput) {
   }
 
   if (toDate) {
-    dueDateFilter.lte = new Date(`${toDate}T00:00:00.000Z`);
+    // Include the entire selected end date
+    dueDateFilter.lt = new Date(
+      new Date(`${toDate}T00:00:00.000Z`).getTime() +
+        24 * 60 * 60 * 1000
+    );
   }
 
-  // OVERDUE is calculated from due date and unpaid status.
   if (status === "OVERDUE") {
-    dueDateFilter.lt = todayUTC;
+    dueDateFilter.lt =
+      dueDateFilter.lt && dueDateFilter.lt < todayUTC
+        ? dueDateFilter.lt
+        : todayUTC;
   }
 
   const where: Prisma.SubscriptionBillingWhereInput = {
@@ -62,49 +69,136 @@ export async function findBillings(query: BillingQueryInput) {
     }),
   };
 
-  const [data, total] = await prisma.$transaction([
-    prisma.subscriptionBilling.findMany({
-      where,
-      include: {
-        subscription: {
-          select: {
-            id: true,
-            subscriptionName: true,
-            billingCycle: true,
-            currencyCode: true,
-            card: {
-              select: {
-                id: true,
-                bank: true,
-                nickname: true,
-                last_four_digit: true,
+  const [data, total, summaryBillings] =
+    await prisma.$transaction([
+      // Paginated records
+      prisma.subscriptionBilling.findMany({
+        where,
+        include: {
+          subscription: {
+            select: {
+              id: true,
+              subscriptionName: true,
+              billingCycle: true,
+              currencyCode: true,
+              card: {
+                select: {
+                  id: true,
+                  bank: true,
+                  nickname: true,
+                  last_four_digit: true,
+                },
               },
             },
           },
         },
-      },
 
-      orderBy: [
-        { dueDate: "asc" },
-        { id: "asc" },
-      ],
+        orderBy: [
+          { dueDate: "asc" },
+          { id: "asc" },
+        ],
 
-      skip: (page - 1) * limit,
-      take: limit,
-    }),
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
 
-    prisma.subscriptionBilling.count({
-      where,
-    }),
-  ]);
+      // Total matching records
+      prisma.subscriptionBilling.count({
+        where,
+      }),
+
+      // All matching records for summary
+      prisma.subscriptionBilling.findMany({
+        where,
+        select: {
+          amount: true,
+          paidAmount: true,
+          dueDate: true,
+          status: true,
+          subscription: {
+            select: {
+              currencyCode: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+  type CurrencyTotals = {
+    currencyCode: string;
+    paid: Prisma.Decimal;
+    outstanding: Prisma.Decimal;
+    overdue: Prisma.Decimal;
+  };
+
+  const currencyMap = new Map<string, CurrencyTotals>();
+
+  for (const billing of summaryBillings) {
+    const currencyCode =
+      billing.subscription.currencyCode ?? "PHP";
+
+    if (!currencyMap.has(currencyCode)) {
+      currencyMap.set(currencyCode, {
+        currencyCode,
+        paid: new Prisma.Decimal(0),
+        outstanding: new Prisma.Decimal(0),
+        overdue: new Prisma.Decimal(0),
+      });
+    }
+
+    const summary = currencyMap.get(currencyCode)!;
+
+    const amount = new Prisma.Decimal(billing.amount);
+    const paidAmount = new Prisma.Decimal(billing.paidAmount);
+
+    const outstanding = Prisma.Decimal.max(
+      amount.minus(paidAmount),
+      new Prisma.Decimal(0)
+    );
+
+    // Paid amount
+    summary.paid = summary.paid.plus(paidAmount);
+
+    // Outstanding amount
+    if (
+      billing.status === "SCHEDULED" ||
+      billing.status === "PARTIALLY_PAID"
+    ) {
+      summary.outstanding =
+        summary.outstanding.plus(outstanding);
+
+      // Overdue amount
+      if (billing.dueDate < todayUTC) {
+        summary.overdue =
+          summary.overdue.plus(outstanding);
+      }
+    }
+  }
+
+  const currencies = Array.from(currencyMap.values())
+    .map((currency) => ({
+      currencyCode: currency.currencyCode,
+      paid: currency.paid.toFixed(2),
+      outstanding: currency.outstanding.toFixed(2),
+      overdue: currency.overdue.toFixed(2),
+    }))
+    .sort((a, b) =>
+      a.currencyCode.localeCompare(b.currencyCode)
+    );
 
   return {
     data,
+
     pagination: {
       page,
       limit,
       total,
       totalPages: Math.ceil(total / limit),
+    },
+
+    summary: {
+      totalRecords: total,
+      currencies,
     },
   };
 }

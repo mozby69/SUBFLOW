@@ -25,6 +25,7 @@ export const billingService = {
     return {
       data: response.data.data,
       pagination: response.data.pagination,
+      summary: response.data.summary
     };
   },
 
