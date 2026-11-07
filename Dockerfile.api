@@ -34,7 +34,7 @@ RUN pnpm deploy --legacy --filter api --prod /prod/api
 FROM node:24-bookworm-slim AS runner
 
 ENV NODE_ENV=production
-ENV PORT=5001
+ENV PORT=5100
 ENV PATH="/app/node_modules/.bin:${PATH}"
 
 WORKDIR /app
@@ -57,7 +57,7 @@ COPY --from=builder --chown=api:nodejs /app/apps/api/src ./src
 
 USER api
 
-EXPOSE 5001
+EXPOSE 5100
 
 CMD ["node", "dist/src/server.js"]
 
